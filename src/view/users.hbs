@@ -1,7 +1,7 @@
 <section class="page-head">
   <div>
     <h1>Користувачі</h1>
-    <p class="subtitle">Усього акаунтів: {{users.length}}</p>
+    <p class="subtitle">Усього акаунтів: <span data-users-count>0</span></p>
   </div>
   <a class="btn btn-primary" href="/users/new">
     <svg class="btn-icon" viewBox="0 0 20 20" aria-hidden="true">
@@ -29,35 +29,8 @@
         <th>Дії</th>
       </tr>
     </thead>
-    <tbody>
-      {{#each users}}
-        <tr>
-          <td class="center">{{id}}</td>
-          <td title="{{name}}">{{name}}</td>
-          <td title="{{email}}">{{email}}</td>
-          <td class="center">{{roleLabel}}</td>
-          <td class="actions-cell">
-            <a class="btn btn-small btn-ghost" href="/users/{{id}}/edit">Редагувати</a>
-            <button
-              type="button"
-              class="btn btn-small btn-ghost"
-              data-password
-              data-id="{{id}}"
-              data-name="{{name}}"
-            >Пароль</button>
-            {{#unless (eq id @root.currentId)}}
-              <button
-                type="button"
-                class="btn btn-small btn-danger"
-                data-delete
-                data-resource="users"
-                data-id="{{id}}"
-                data-name="{{name}}"
-              >Видалити</button>
-            {{/unless}}
-          </td>
-        </tr>
-      {{/each}}
+    <tbody data-users-body data-current="{{currentId}}">
+      <tr><td class="empty-cell" colspan="5">Завантаження...</td></tr>
     </tbody>
   </table>
 </section>

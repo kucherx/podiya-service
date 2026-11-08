@@ -1,7 +1,7 @@
 <section class="page-head">
   <div>
     <h1>{{title}}</h1>
-    <p class="subtitle">Усього записів: {{items.length}}</p>
+    <p class="subtitle">Усього записів: <span data-table-count>0</span></p>
   </div>
   {{#if canManage}}
     <a class="btn btn-primary" href="{{createHref}}">
@@ -27,32 +27,16 @@
         {{#if canManage}}<th class="actions-col">Дії</th>{{/if}}
       </tr>
     </thead>
-    <tbody>
-      {{#each items}}
-        <tr{{#if @root.hasDetail}} class="row-link" data-detail="{{detailHref}}"{{/if}}>
-          {{#each cells}}<td class="{{lookup @root.align @index}}" title="{{this}}">{{this}}</td>{{/each}}
-          {{#if @root.hasDetail}}
-            <td class="actions-cell">
-              <a class="btn btn-small btn-ghost" href="{{detailHref}}">Деталі</a>
-            </td>
-          {{/if}}
-          {{#if @root.canManage}}
-            <td class="actions-cell">
-              <a class="btn btn-small btn-ghost" href="{{editHref}}">Редагувати</a>
-              <button
-                type="button"
-                class="btn btn-small btn-danger"
-                data-delete
-                data-resource="{{@root.key}}"
-                data-id="{{id}}"
-                data-name="{{name}}"
-              >Видалити</button>
-            </td>
-          {{/if}}
-        </tr>
-      {{else}}
-        <tr><td class="empty-cell" colspan="{{colspan}}">Записів поки немає</td></tr>
-      {{/each}}
+    <tbody
+      data-table-body
+      data-key="{{key}}"
+      data-manage="{{canManage}}"
+      data-detail="{{hasDetail}}"
+      data-center="{{center}}"
+      data-colspan="{{colspan}}"
+      data-start="{{start}}"
+    >
+      <tr><td class="empty-cell" colspan="{{colspan}}">Завантаження...</td></tr>
     </tbody>
   </table>
 </section>

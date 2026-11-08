@@ -51,7 +51,7 @@
               <small>{{roleLabel}}</small>
             </span>
           </a>
-          <form method="post" action="/auth/logout" novalidate>
+          <form method="post" action="/api/auth/logout" novalidate data-ajax data-api data-reload="1" data-redirect="/">
             <button class="btn btn-ghost btn-small" type="submit">
               <svg class="nav-icon" aria-hidden="true"><use href="#icon-logout"></use></svg>
               Вийти
@@ -91,8 +91,11 @@
   <script src="/js/modal.js" defer></script>
   <script src="/js/password-modal.js" defer></script>
   <script src="/js/user-form.js" defer></script>
+  <script src="/js/table-page.js?v=4" defer></script>
+  <script src="/js/users-page.js?v=3" defer></script>
   <script src="/js/row-link.js" defer></script>
-  <script src="/js/form-feedback.js" defer></script>
-  <script src="/js/ajax.js" defer></script>
+  <script src="/js/form-feedback.js?v=3" defer></script>
+  <script src="/js/page-swap.js?v=3" defer></script>
+  <script src="/js/ajax.js?v=3" defer></script>
 </body>
 </html>

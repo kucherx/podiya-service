@@ -31,9 +31,9 @@ export async function applyCreateRules(role, key, raw, user) {
     if (!user.organizer) throw new ApiError(403, 'У вашого акаунта немає профілю організатора.');
     if (!raw.event) return;
     const event = await eventById(raw.event);
-    if (!event) throw new ApiError(422, 'Оберіть коректну подію.');
+    if (!event) throw new ApiError(422, 'Оберіть коректну подію.', 'event');
     if (event.organizer?.id !== user.organizer.id) {
-      throw new ApiError(403, 'Оберіть подію, якою ви керуєте.');
+      throw new ApiError(403, 'Оберіть подію, якою ви керуєте.', 'event');
     }
   }
 
@@ -41,21 +41,21 @@ export async function applyCreateRules(role, key, raw, user) {
     if (!user.client) throw new ApiError(403, 'У вашого акаунта немає профілю клієнта.');
     const event = await eventById(raw.event);
     if (!event || event.status !== 'published') {
-      throw new ApiError(403, 'Квиток зараз недоступний.');
+      throw new ApiError(403, 'Квиток зараз недоступний.', 'event');
     }
     raw.client = user.client.id;
     raw.status = 'reserved';
     raw.purchasedAt = formatInputDateTime(new Date());
     const category = await categoryById(raw.category);
-    if (!category) throw new ApiError(422, 'Оберіть коректну категорію квитка.');
+    if (!category) throw new ApiError(422, 'Оберіть коректну категорію квитка.', 'category');
     raw.price = category.price;
     const available = category.quantity - await occupiedCount(event.id, category.id);
     const quantity = Number(raw.quantity);
     if (!Number.isInteger(quantity) || quantity < 1) {
-      throw new ApiError(422, 'Вкажіть коректну кількість квитків.');
+      throw new ApiError(422, 'Вкажіть коректну кількість квитків.', 'quantity');
     }
-    if (available <= 0) throw new ApiError(409, 'Квитки цієї категорії закінчилися.');
-    if (quantity > available) throw new ApiError(409, `Доступно лише ${available} квитків.`);
+    if (available <= 0) throw new ApiError(409, 'Квитки цієї категорії закінчилися.', 'quantity');
+    if (quantity > available) throw new ApiError(409, `Доступно лише ${available} квитків.`, 'quantity');
   }
 }
 
@@ -70,7 +70,7 @@ export async function applyUpdateRules(role, key, raw, user) {
   if (key === 'tickets' && raw.event !== undefined) {
     const event = await eventById(raw.event);
     if (!event || event.organizer?.id !== user.organizer?.id) {
-      throw new ApiError(403, 'Оберіть подію, якою ви керуєте.');
+      throw new ApiError(403, 'Оберіть подію, якою ви керуєте.', 'event');
     }
   }
 }

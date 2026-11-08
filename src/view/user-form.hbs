@@ -4,7 +4,7 @@
   </div>
 </section>
 
-<form class="entity-form" method="post" action="{{action}}" novalidate data-ajax>
+<form class="entity-form" method="post" action="{{apiAction}}" novalidate data-ajax data-api data-method="{{#if isEdit}}PUT{{else}}POST{{/if}}" data-redirect="{{redirect}}">
   <section class="form-card">
     <div class="form-grid">
       <div class="field{{#if errors.email}} field-invalid{{/if}}">

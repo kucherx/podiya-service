@@ -37,6 +37,8 @@ function renderForm(req, res, key, id, fields, errors, status = 200) {
     fields,
     errors,
     action: id ? `/${key}/${id}` : `/${key}`,
+    apiAction: id ? `/api/${key}/${id}` : `/api/${key}`,
+    redirect: `/${key}`,
     cancelHref: `/${key}`,
     submitLabel: id ? 'Зберегти зміни' : 'Створити запис'
   });

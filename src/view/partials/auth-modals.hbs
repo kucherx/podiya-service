@@ -20,7 +20,7 @@
         <div class="alert alert-error">{{authErrors._form}}</div>
       {{/if}}
 
-      <form method="post" action="/auth/login" novalidate data-ajax>
+      <form method="post" action="/api/auth/login" novalidate data-ajax data-api>
         <div class="field">
           <label for="login-email">Email</label>
           <input id="login-email" type="email" name="email" value="{{authValues.email}}" placeholder="you@gmail.com" autocomplete="email">
@@ -53,7 +53,7 @@
         <div class="alert alert-error">{{authErrors._form}}</div>
       {{/if}}
 
-      <form method="post" action="/auth/register" novalidate data-ajax>
+      <form method="post" action="/api/auth/register" novalidate data-ajax data-api>
         <div class="field">
           <label for="register-name">ПІБ</label>
           <input id="register-name" type="text" name="fullName" value="{{authValues.fullName}}" placeholder="Прізвище Ім’я По батькові" autocomplete="name">

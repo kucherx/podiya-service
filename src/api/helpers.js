@@ -3,16 +3,16 @@ import { formatInputDateTime } from '../view/format.js';
 import { formConfig } from '../view/forms/index.js';
 
 export class ApiError extends Error {
-  constructor(status, message, details) {
+  constructor(status, message, field) {
     super(message);
     this.status = status;
-    this.details = details;
+    this.field = field;
   }
 }
 
-export function jsonError(res, status, message, details) {
+export function jsonError(res, status, message, field) {
   const body = { message };
-  if (details) body.details = details;
+  if (field) body.field = field;
   return res.status(status).json(body);
 }
 

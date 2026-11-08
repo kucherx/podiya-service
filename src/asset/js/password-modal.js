@@ -19,7 +19,7 @@
   function open(button) {
     if (!modal) return;
     lastTrigger = button;
-    form.action = `/users/${button.dataset.id}/password`;
+    form.action = `/api/users/${button.dataset.id}/password`;
     user.textContent = button.dataset.name || '';
     form.hidden = false;
     result.hidden = true;

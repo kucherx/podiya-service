@@ -53,7 +53,7 @@ export async function update(req, res) {
     });
     return res.json(updated);
   } catch (error) {
-    if (error instanceof ApiError) return jsonError(res, error.status, error.message);
+    if (error instanceof ApiError) return jsonError(res, error.status, error.message, error.field);
     return res.status(422).json({
       message: 'Не вдалося оновити запис.',
       errors: mapDbError(error, config)

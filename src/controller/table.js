@@ -1,4 +1,3 @@
-import { AppDataSource } from '../db/data-source.js';
 import { tableConfig } from '../view/table-config.js';
 import { navigationFor } from '../view/navigation.js';
 import { messageFromQuery } from '../lib/messages.js';
@@ -16,11 +15,6 @@ export function listTable(key) {
       return renderError(req, res, 403, 'Доступ заборонено', 'У вас немає прав для перегляду цієї сторінки.');
     }
 
-    const records = await AppDataSource.getRepository(config.entity).find({
-      where,
-      relations: config.relations || {},
-      order: config.order
-    });
     const canManage = canManageResource(role, key);
     const hideId = role === ROLES.CLIENT || role === ROLES.GUEST;
     const start = hideId ? 1 : 0;
@@ -39,21 +33,13 @@ export function listTable(key) {
       active: key,
       nav: navigationFor(role),
       columns,
-      align: columns.map((_, index) => centers.includes(index) ? 'center' : ''),
+      center: centers.join(','),
       widths: baseWidths.map((width) => `${(width * scale).toFixed(1)}%`),
       colspan: columns.length + (hasDetail ? 1 : 0) + (canManage ? 1 : 0),
       key,
+      start,
       canManage,
       hasDetail,
-      items: records.map((record) => ({
-        id: record.id,
-        cells: config.row(record).slice(start),
-        name: config.label(record),
-        editHref: `/${key}/${record.id}/edit`,
-        detailHref: key === 'tickets'
-          ? `/events/${record.event?.id}?ticket=${record.id}`
-          : `/${key}/${record.id}`
-      })),
       createHref: `/${key}/new`,
       message: messageFromQuery(req.query)
     });

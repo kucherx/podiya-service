@@ -30,7 +30,7 @@
       <div class="alert alert-error">{{profileErrors._form}}</div>
     {{/if}}
 
-    <form method="post" action="/profile" novalidate data-ajax>
+    <form method="post" action="/api/profile" novalidate data-ajax data-api data-method="PATCH" data-redirect="/profile">
       <div class="form-grid">
         {{#each fields}}
           <div class="field{{#if wide}} field-wide{{/if}}{{#if error}} field-invalid{{/if}}">
@@ -63,7 +63,7 @@
     <h2>Зміна пароля</h2>
     <p class="profile-hint">Використовуйте пароль довжиною щонайменше 8 символів.</p>
 
-    <form method="post" action="/profile/password" novalidate data-ajax>
+    <form method="post" action="/api/profile/password" novalidate data-ajax data-api data-redirect="/profile">
       <div class="field{{#if passwordErrors.currentPassword}} field-invalid{{/if}}">
         <label for="current-password">Поточний пароль</label>
         <input id="current-password" type="password" name="currentPassword" autocomplete="current-password">

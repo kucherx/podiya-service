@@ -35,7 +35,7 @@ export async function create(req, res) {
     });
     return res.status(201).json(row);
   } catch (error) {
-    if (error instanceof ApiError) return jsonError(res, error.status, error.message);
+    if (error instanceof ApiError) return jsonError(res, error.status, error.message, error.field);
     return res.status(422).json({
       message: 'Не вдалося створити запис.',
       errors: mapDbError(error, config)

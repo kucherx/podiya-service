@@ -28,8 +28,9 @@
         <p class="category-stock">Доступно: {{available}}</p>
         {{#if @root.canBuy}}
           {{#if available}}
-            <form class="buy-form" method="post" action="/events/{{@root.event.id}}/buy" data-ajax novalidate>
-              <input type="hidden" name="categoryId" value="{{id}}">
+            <form class="buy-form" method="post" action="/api/tickets" data-ajax data-api data-redirect="/events/{{@root.event.id}}?notice=reserved" novalidate>
+              <input type="hidden" name="event" value="{{@root.event.id}}">
+              <input type="hidden" name="category" value="{{id}}">
               <label class="buy-qty" for="buy-qty-{{id}}">
                 <span>Кількість</span>
                 <input id="buy-qty-{{id}}" type="number" name="quantity" value="1" min="1" max="{{available}}" step="1">
@@ -73,7 +74,7 @@
               <td class="center">{{formatMoney total}}</td>
               <td class="actions-cell">
                 {{#if (eq status 'reserved')}}
-                  <form method="post" action="/tickets/{{id}}/cancel" data-ajax novalidate>
+                  <form method="post" action="/api/tickets/{{id}}/cancel" data-ajax data-api data-redirect="/events/{{@root.event.id}}?notice=cancelled" novalidate>
                     <button class="btn btn-small btn-danger" type="submit">Скасувати</button>
                   </form>
                 {{/if}}
@@ -111,19 +112,19 @@
               <td class="center">{{formatMoney total}}</td>
               <td class="actions-cell">
                 {{#if (eq status 'reserved')}}
-                  <form method="post" action="/tickets/{{id}}/pay" data-ajax novalidate>
+                  <form method="post" action="/api/tickets/{{id}}/pay" data-ajax data-api data-redirect="/events/{{@root.event.id}}?notice=paid" novalidate>
                     <button class="btn btn-small btn-ghost" type="submit">Підтвердити оплату</button>
                   </form>
                 {{/if}}
                 {{#if (eq status 'sold')}}
                   {{#unless checkedInAt}}
-                    <form method="post" action="/tickets/{{id}}/check-in" data-ajax novalidate>
+                    <form method="post" action="/api/tickets/{{id}}/check-in" data-ajax data-api data-redirect="/events/{{@root.event.id}}?notice=checkedIn" novalidate>
                       <button class="btn btn-small btn-ghost" type="submit">Відмітити</button>
                     </form>
                   {{/unless}}
                 {{/if}}
                 {{#unless (eq status 'cancelled')}}
-                  <form method="post" action="/tickets/{{id}}/cancel" data-ajax novalidate>
+                  <form method="post" action="/api/tickets/{{id}}/cancel" data-ajax data-api data-redirect="/events/{{@root.event.id}}?notice=cancelled" novalidate>
                     <button class="btn btn-small btn-danger" type="submit">Скасувати</button>
                   </form>
                 {{/unless}}

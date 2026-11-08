@@ -27,7 +27,7 @@ export const resources = {
   categories: {
     key: 'categories',
     entity: 'TicketCategory',
-    relations: {},
+    relations: { events: true },
     order: { name: 'ASC' },
     filters: [],
     search: ['name']

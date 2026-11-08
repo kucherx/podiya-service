@@ -22,6 +22,7 @@
       return;
     }
 
+    holder.classList.add('field-invalid');
     const box = document.createElement('p');
     box.className = 'field-error';
     box.dataset.ajaxFieldError = '1';
@@ -29,6 +30,38 @@
 
     if (holder.tagName === 'LABEL') holder.insertAdjacentElement('afterend', box);
     else holder.appendChild(box);
+  }
+
+  function showFieldErrors(form, errors = {}) {
+    clearFormErrors(form);
+    let formMessage = '';
+
+    for (const [name, message] of Object.entries(errors)) {
+      if (name === '_form') {
+        formMessage = message;
+        continue;
+      }
+      const input = form.querySelector(`[name="${name}"]`);
+      const holder = input?.closest('.buy-qty, .field') || input?.parentElement;
+      if (!holder) {
+        formMessage = formMessage || message;
+        continue;
+      }
+      holder.classList.add('field-invalid');
+      const box = document.createElement('p');
+      box.className = 'field-error';
+      box.dataset.ajaxFieldError = '1';
+      box.textContent = message;
+      if (holder.tagName === 'LABEL') holder.insertAdjacentElement('afterend', box);
+      else holder.appendChild(box);
+    }
+
+    if (formMessage) {
+      const box = document.createElement('p');
+      box.className = 'field-error ajax-form-error';
+      box.textContent = formMessage;
+      form.appendChild(box);
+    }
   }
 
   function showDeleteError(message) {
@@ -83,6 +116,7 @@
     clearFormErrors,
     showFormError,
     showFieldError,
+    showFieldErrors,
     showDeleteError,
     showAuthErrors
   };

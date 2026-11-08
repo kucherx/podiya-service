@@ -1,7 +1,5 @@
 import { ROLES } from '../auth/roles.js';
 
-const publicKeys = new Set(['locations', 'organizers', 'categories']);
-
 export function readScope(role, key, user) {
   if (role === ROLES.ADMIN) return {};
   if (key === 'events') {
@@ -17,13 +15,8 @@ export function readScope(role, key, user) {
     if (role === ROLES.CLIENT) {
       return user?.client ? { client: { id: user.client.id } } : { id: -1 };
     }
-    return null;
   }
-  if (key === 'clients') {
-    if (role === ROLES.CLIENT && user?.client) return { id: user.client.id };
-    return null;
-  }
-  return publicKeys.has(key) ? {} : null;
+  return null;
 }
 
 export function canCreate(role, key) {
@@ -42,10 +35,8 @@ export function canReadRecord(role, key, record, user) {
   if (key === 'tickets') {
     if (role === ROLES.ORGANIZER) return record.event?.organizer?.id === user?.organizer?.id;
     if (role === ROLES.CLIENT) return record.client?.id === user?.client?.id;
-    return false;
   }
-  if (key === 'clients') return role === ROLES.CLIENT && record.id === user?.client?.id;
-  return publicKeys.has(key);
+  return false;
 }
 
 export function canWriteRecord(role, key, record, user, mode) {
@@ -54,11 +45,8 @@ export function canWriteRecord(role, key, record, user, mode) {
     if (key === 'events') return record.organizer?.id === user?.organizer?.id;
     if (key === 'tickets') return record.event?.organizer?.id === user?.organizer?.id;
   }
-  if (role === ROLES.CLIENT) {
-    if (key === 'tickets' && mode === 'delete') {
-      return record.client?.id === user?.client?.id && record.status === 'reserved';
-    }
-    if (key === 'clients' && mode === 'update') return record.id === user?.client?.id;
+  if (role === ROLES.CLIENT && key === 'tickets' && mode === 'delete') {
+    return record.client?.id === user?.client?.id && record.status === 'reserved';
   }
   return false;
 }

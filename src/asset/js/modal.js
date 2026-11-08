@@ -23,7 +23,10 @@
     const id = button.dataset.id;
 
     lastTrigger = button;
-    form.action = `/${resource}/${id}/delete`;
+    form.action = `/api/${resource}/${id}`;
+    form.dataset.method = 'DELETE';
+    form.dataset.api = '1';
+    form.dataset.redirect = `/${resource}`;
     name.textContent = button.dataset.name || `#${id}`;
     related.innerHTML = '';
     warning.hidden = true;
