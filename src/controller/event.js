@@ -1,13 +1,12 @@
-import { In, Not } from 'typeorm';
+import { Not } from 'typeorm';
 import { AppDataSource } from '../db/data-source.js';
 import { navigationFor } from '../view/navigation.js';
 import { messageFromQuery } from '../lib/messages.js';
 import { ROLES } from '../auth/roles.js';
 import { nextTicketCode } from '../service/ticket-code.js';
+import { occupiedCount } from '../service/ticket-stock.js';
 import { wantsJson } from '../lib/request.js';
 import { renderError } from '../lib/render-error.js';
-
-const occupiedStatuses = In(['reserved', 'sold']);
 
 function repository(name) {
   return AppDataSource.getRepository(name);
@@ -28,13 +27,6 @@ async function loadEvent(id) {
     where: { id },
     relations: { location: true, organizer: true, categories: true }
   });
-}
-
-async function occupiedCount(eventId, categoryId) {
-  const rows = await repository('Ticket').find({
-    where: { event: { id: eventId }, category: { id: categoryId }, status: occupiedStatuses }
-  });
-  return rows.reduce((sum, ticket) => sum + Number(ticket.quantity || 1), 0);
 }
 
 function withTotals(tickets) {

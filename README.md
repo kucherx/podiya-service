@@ -46,7 +46,36 @@
 - вхід і реєстрація в модальних вікнах лише для неавторизованих;
 - зміна особистих даних і пароля в профілі;
 - перегляд деталей події та купівля кількох квитків одним замовленням;
-- підтвердження оплати й відмітка присутності організатором.
+- підтвердження оплати й відмітка присутності організатором;
+- RESTful API для всіх сутностей із рольовим обмеженням вибірки.
+
+## REST API
+
+Базовий шлях: `http://localhost:4200/api`.
+
+Автентифікація виконується через сесію Passport: спочатку увійдіть на сайті, після чого захищені ресурси доступні за посиланнями в браузері або через cookie-сесію.
+
+| Метод | Шлях | Опис |
+| --- | --- | --- |
+| GET | `/api` | індекс ресурсів і можливих запитів |
+| GET | `/api/:resource` | список записів |
+| GET | `/api/:resource/:id` | один запис |
+| POST | `/api/:resource` | створити запис |
+| PUT, PATCH | `/api/:resource/:id` | оновити запис |
+| DELETE | `/api/:resource/:id` | видалити запис |
+
+Ресурси: `events`, `locations`, `organizers`, `categories`, `tickets`, `clients`.
+
+Для списків підтримуються `limit`, `offset`, `q`, `status`, `city`, а також фільтри за зв’язками `event`, `category`, `client`, `organizer`, `location`.
+
+Доступ до даних:
+
+- гість бачить лише опубліковані події та довідники локацій, організаторів і категорій;
+- клієнт бачить опубліковані події, власні квитки та власний профіль клієнта;
+- організатор бачить власні події й квитки цих подій;
+- адміністратор має повний доступ до всіх ресурсів.
+
+Список квитків і клієнтів не доступний гостям. Для клієнта й організатора API автоматично обмежує вибірку власними записами, а спроба відкрити чужий запис повертає `403`. Видалення запису з пов’язаними даними повертає `409`.
 
 ## Сутності
 
@@ -83,6 +112,8 @@ npm start
 - `POST /auth/login`, `POST /auth/register`, `POST /auth/logout`;
 - `GET /locations`, `/organizers`, `/categories`, `/clients` — лише адміністратор;
 - CRUD-маршрути `/events` і `/tickets` — адміністратор і організатор;
+- `GET /api` — індекс REST API;
+- `GET/POST /api/:resource`, `GET/PUT/PATCH/DELETE /api/:resource/:id` — REST API;
 - `GET /api/:resource/:id/related` — дані для модального вікна видалення;
 - `GET /health` — перевірка бази даних.
 
@@ -91,6 +122,8 @@ npm start
 ```text
 src/
   app.js, server.js
+  api/            resources.js, access.js, helpers.js, rules.js, router.js,
+                  controllers/ (index, read, create, update, remove)
   auth/           roles.js, passwords.js, access.js, passport.js,
                   middleware.js, user-view.js
   controller/     table.js, form.js, record.js, auth.js, profile.js,
@@ -102,7 +135,7 @@ src/
       data/       clients.js, events.js, locations.js, organizers.js,
                   categories.js, users.js
   lib/            messages.js, request.js, render-error.js
-  service/        form-fields.js, relations.js, ticket-code.js
+  service/        form-fields.js, relations.js, ticket-code.js, ticket-stock.js
   validation/     validate.js, values.js, unique.js, db-errors.js
   view/           table.hbs, form.hbs, profile.hbs, users.hbs, user-form.hbs,
                   event.hbs, error.hbs, table-config.js, format.js, navigation.js,

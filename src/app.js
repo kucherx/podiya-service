@@ -14,6 +14,7 @@ import { listUsers, deleteUser, resetPassword } from './controller/admin-user.js
 import { newUser, editUser, saveUser } from './controller/admin-user-form.js';
 import { showEvent, buyTicket } from './controller/event.js';
 import { confirmPayment, checkInTicket, cancelTicket } from './controller/ticket-action.js';
+import apiRouter from './api/router.js';
 import { authLocals, requireAuth, requireGuest, requireRole } from './auth/middleware.js';
 import passport from './auth/passport.js';
 import { ROLES } from './auth/roles.js';
@@ -94,6 +95,7 @@ app.get('/api/users/:id/related', admin, (req, res) => {
   res.json({ total: 0, items: [] });
 });
 app.get('/api/:resource/:id/related', requireAuth, relatedInfo());
+app.use('/api', apiRouter);
 app.get('/health', async (req, res) => {
   const repositories = [
     ['locations', 'Location'],
