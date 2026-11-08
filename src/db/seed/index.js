@@ -89,8 +89,15 @@ export async function seed(dataSource) {
           code: ticketCode(eventIndex, categoryIndex, ticketIndex),
           status: isSold ? 'sold' : isReserved ? 'reserved' : 'available',
           price: category.price,
+          quantity: 1,
           purchasedAt: isSold
             ? new Date(Date.UTC(2026, 10, 10 + eventIndex, 12, 0, 0))
+            : null,
+          paidAt: isSold
+            ? new Date(Date.UTC(2026, 10, 10 + eventIndex, 13, 0, 0))
+            : null,
+          checkedInAt: isSold
+            ? new Date(Date.UTC(2026, 10, 12 + eventIndex, 18, 0, 0))
             : null,
           event,
           category,

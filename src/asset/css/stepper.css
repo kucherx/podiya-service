@@ -7,6 +7,17 @@
   padding-right: 72px;
 }
 
+.number-control input::-webkit-outer-spin-button,
+.number-control input::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.number-control input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
 .number-actions {
   position: absolute;
   top: 5px;

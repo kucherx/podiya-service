@@ -20,7 +20,14 @@
 - **Відвідувач** — неавторизований користувач. Бачить лише опубліковані події; може відкрити модальні вікна входу та реєстрації.
 - **Клієнт** — бачить опубліковані події, власні квитки та профіль. Реєстрація створює саме клієнта.
 - **Організатор** — бачить і редагує лише власні події та квитки цих подій, має профіль. Не має доступу до локацій, організаторів, категорій і клієнтів.
-- **Адміністратор** — має доступ до всіх сутностей і дій.
+- **Адміністратор** — має доступ до всіх сутностей і дій, керує користувачами та їхніми ролями.
+
+## Адмін-функції
+
+- створення акаунтів із ролями `admin`, `organizer`, `client`;
+- прив’язка організатора або клієнта до акаунта;
+- редагування та видалення користувачів;
+- скидання пароля з генерацією нового та копіюванням у модальному вікні.
 
 ## Демо-акаунти
 
@@ -37,7 +44,9 @@
 - серверна валідація та локалізація помилок БД;
 - модальне вікно видалення із забороною видалення пов’язаних записів;
 - вхід і реєстрація в модальних вікнах лише для неавторизованих;
-- зміна особистих даних і пароля в профілі.
+- зміна особистих даних і пароля в профілі;
+- перегляд деталей події та купівля кількох квитків одним замовленням;
+- підтвердження оплати й відмітка присутності організатором.
 
 ## Сутності
 
@@ -46,7 +55,7 @@
 - `Event` — подія з датами, статусом, локацією, організатором і категоріями.
 - `TicketCategory` — глобальна категорія квитка.
 - `Client` — клієнт, який купує квитки.
-- `Ticket` — квиток на подію з категорією та необов’язковим клієнтом.
+- `Ticket` — замовлення на один або кілька квитків певної категорії з необов’язковим клієнтом.
 - `User` — обліковий запис із роллю `admin`, `organizer` або `client`.
 
 ## Запуск
@@ -64,7 +73,12 @@ npm start
 ## Маршрути
 
 - `GET /`, `GET /events` — список подій;
+- `GET /events/:id` — деталі події та купівля квитка;
+- `POST /events/:id/buy` — придбання квитка клієнтом;
+- `POST /tickets/:id/pay`, `/check-in`, `/cancel` — оплата, присутність, скасування;
 - `GET /tickets` — квитки з урахуванням ролі;
+- `GET /users` — керування користувачами (адміністратор);
+- `POST /users/:id/password` — генерація нового пароля;
 - `GET /profile` — профіль авторизованого користувача;
 - `POST /auth/login`, `POST /auth/register`, `POST /auth/logout`;
 - `GET /locations`, `/organizers`, `/categories`, `/clients` — лише адміністратор;
@@ -79,27 +93,29 @@ src/
   app.js, server.js
   auth/           roles.js, passwords.js, access.js, passport.js,
                   middleware.js, user-view.js
-  controller/     table.js, form.js, record.js, auth.js, profile.js
+  controller/     table.js, form.js, record.js, auth.js, profile.js,
+                  admin-user.js, admin-user-form.js, event.js, ticket-action.js
   db/             data-source.js
     entity/       client.js, event.js, location.js, organizer.js,
                   ticket-category.js, ticket.js, user.js, index.js
     seed/         index.js, run.js
       data/       clients.js, events.js, locations.js, organizers.js,
                   categories.js, users.js
-  lib/            messages.js
+  lib/            messages.js, request.js, render-error.js
   service/        form-fields.js, relations.js, ticket-code.js
   validation/     validate.js, values.js, unique.js, db-errors.js
-  view/           table.hbs, form.hbs, profile.hbs, error.hbs,
-                  table-config.js, format.js, navigation.js,
+  view/           table.hbs, form.hbs, profile.hbs, users.hbs, user-form.hbs,
+                  event.hbs, error.hbs, table-config.js, format.js, navigation.js,
                   forms/ (events, locations, organizers, categories,
                   tickets, clients, index), layouts/main.hbs,
-                  partials/ (delete-modal.hbs, auth-modals.hbs, icons.hbs)
+                  partials/ (delete-modal.hbs, auth-modals.hbs, password-modal.hbs, icons.hbs)
   asset/
     css/          base, nav, header, controls, table, form, multi-select,
                   hints, stepper, select, date, calendar, calendar-footer,
-                  modal, auth, profile
+                  modal, auth, profile, password, event, event-buy, event-tickets
     js/           select, multi-select, phone-hint, date-utils, date-picker,
-                  stepper, modal, auth
+                  stepper, modal, auth, ajax, form-feedback, password-modal,
+                  user-form, row-link
 ```
 
 Файл бази даних: `storage/podiya.sqlite`. SQL-схема: `schema.sql`.

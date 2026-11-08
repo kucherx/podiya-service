@@ -37,6 +37,7 @@ export const tickets = {
     },
     { name: 'status', label: 'Статус', type: 'select', required: true, options: ticketStatusOptions, default: 'available', placeholder: 'Оберіть статус' },
     { name: 'price', label: 'Ціна, ₴', type: 'number', required: true, min: 0, step: 0.01, placeholder: '450' },
+    { name: 'quantity', label: 'Кількість', type: 'number', required: true, integer: true, min: 1, max: 100000, step: 1, default: 1, placeholder: '1' },
     { name: 'purchasedAt', label: 'Дата продажу', type: 'datetime' }
   ],
   dependents: [],

@@ -3,8 +3,8 @@ import { formConfig } from '../view/forms/index.js';
 import { getDependents } from '../service/relations.js';
 import { canAccessRecord, canManageResource } from '../auth/access.js';
 import { ROLES } from '../auth/roles.js';
-import { navigationFor } from '../view/navigation.js';
 import { wantsJson } from '../lib/request.js';
+import { renderError } from '../lib/render-error.js';
 
 function parsedId(value) {
   const id = Number(value);
@@ -39,22 +39,12 @@ export function deleteRecord(key) {
 
     if (!canManageResource(req.user.role, key)) {
       if (wantsJson(req)) return res.status(403).json({ ok: false, message: 'Доступ заборонено.' });
-      return res.status(403).render('error', {
-        title: 'Доступ заборонено',
-        message: 'У вас немає прав для цієї дії.',
-        active: null,
-        nav: navigationFor(req.user.role)
-      });
+      return renderError(req, res, 403, 'Доступ заборонено', 'У вас немає прав для цієї дії.');
     }
 
     if (req.user.role === ROLES.ORGANIZER && !(await canAccessRecord(req.user.role, key, id, req.user))) {
       if (wantsJson(req)) return res.status(403).json({ ok: false, message: 'Доступ заборонено.' });
-      return res.status(403).render('error', {
-        title: 'Доступ заборонено',
-        message: 'У вас немає прав для цієї дії.',
-        active: null,
-        nav: navigationFor(req.user.role)
-      });
+      return renderError(req, res, 403, 'Доступ заборонено', 'У вас немає прав для цієї дії.');
     }
 
     const dependents = await getDependents(key, id);

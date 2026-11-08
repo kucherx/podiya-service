@@ -74,9 +74,9 @@ export const tableConfig = {
     entity: 'Ticket',
     title: 'Квитки',
     label: (ticket) => ticket.code,
-    columns: ['ID', 'Код', 'Подія', 'Категорія', 'Клієнт', 'Статус', 'Ціна'],
-    center: [0, 1, 5, 6],
-    widths: ['5%', '12%', '27%', '14%', '16%', '14%', '12%'],
+    columns: ['ID', 'Код', 'Подія', 'Категорія', 'Клієнт', 'К-сть', 'Статус', 'Сума'],
+    center: [0, 1, 5, 6, 7],
+    widths: ['5%', '11%', '24%', '13%', '15%', '7%', '12%', '13%'],
     relations: { event: true, category: true, client: true },
     order: { code: 'ASC' },
     row: (ticket) => [
@@ -85,8 +85,9 @@ export const tableConfig = {
       ticket.event?.title || '',
       ticket.category?.name || '',
       ticket.client?.fullName || '',
+      ticket.quantity || 1,
       formatStatus(ticket.status),
-      formatMoney(ticket.price)
+      formatMoney(Number(ticket.price || 0) * Number(ticket.quantity || 1))
     ]
   },
   clients: {

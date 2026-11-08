@@ -1,6 +1,7 @@
 import { navigationFor } from '../view/navigation.js';
 import { ROLES, ROLE_LABELS } from './roles.js';
 import { publicInfo } from './user-view.js';
+import { renderError } from '../lib/render-error.js';
 
 export function authLocals(req, res, next) {
   const user = req.user || null;
@@ -50,11 +51,6 @@ export function requireRole(...roles) {
       return res.status(403).json({ message: 'Доступ заборонено.' });
     }
 
-    res.status(403).render('error', {
-      title: 'Доступ заборонено',
-      message: 'У вас немає прав для перегляду цієї сторінки.',
-      active: null,
-      nav: navigationFor(req.user.role)
-    });
+    return renderError(req, res, 403, 'Доступ заборонено', 'У вас немає прав для перегляду цієї сторінки.');
   };
 }

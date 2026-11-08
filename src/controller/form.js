@@ -8,6 +8,7 @@ import { nextTicketCode } from '../service/ticket-code.js';
 import { ROLES } from '../auth/roles.js';
 import { canAccessRecord } from '../auth/access.js';
 import { wantsJson } from '../lib/request.js';
+import { renderError } from '../lib/render-error.js';
 
 function parsedId(value) {
   const id = Number(value);
@@ -42,21 +43,11 @@ function renderForm(req, res, key, id, fields, errors, status = 200) {
 }
 
 function notFound(req, res, message = 'Запис не знайдено.') {
-  res.status(404).render('error', {
-    title: 'Запис не знайдено',
-    message,
-    active: null,
-    nav: navigationFor(req.user.role)
-  });
+  return renderError(req, res, 404, 'Запис не знайдено', message);
 }
 
 function forbidden(req, res) {
-  res.status(403).render('error', {
-    title: 'Доступ заборонено',
-    message: 'У вас немає прав для цієї дії.',
-    active: null,
-    nav: navigationFor(req.user.role)
-  });
+  return renderError(req, res, 403, 'Доступ заборонено', 'У вас немає прав для цієї дії.');
 }
 
 export function showForm(key) {

@@ -6,7 +6,8 @@ const items = [
   { key: 'organizers', label: 'Організатори', href: '/organizers' },
   { key: 'categories', label: 'Категорії квитків', href: '/categories' },
   { key: 'tickets', label: 'Квитки', href: '/tickets' },
-  { key: 'clients', label: 'Клієнти', href: '/clients' }
+  { key: 'clients', label: 'Клієнти', href: '/clients' },
+  { key: 'users', label: 'Користувачі', href: '/users' }
 ];
 
 export const navigation = items;

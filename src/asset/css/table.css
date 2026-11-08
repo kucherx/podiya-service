@@ -18,7 +18,7 @@
   overflow: hidden;
   border-bottom: 1px solid var(--line);
   font-size: 13px;
-  text-align: left;
+  text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -41,6 +41,10 @@
   background: #fdf8f2;
 }
 
+.table-card tbody tr.row-link {
+  cursor: pointer;
+}
+
 .table-card tbody tr:last-child td {
   border-bottom: 0;
 }
@@ -59,12 +63,16 @@
   width: 18%;
 }
 
+.details-width {
+  width: 10%;
+}
+
 .actions-col {
   text-align: center;
 }
 
 .actions-cell {
-  text-align: right;
+  text-align: center;
   white-space: nowrap;
 }
 

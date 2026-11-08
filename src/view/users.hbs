@@ -1,0 +1,63 @@
+<section class="page-head">
+  <div>
+    <h1>Користувачі</h1>
+    <p class="subtitle">Усього акаунтів: {{users.length}}</p>
+  </div>
+  <a class="btn btn-primary" href="/users/new">
+    <svg class="btn-icon" viewBox="0 0 20 20" aria-hidden="true">
+      <path d="M10 4v12M4 10h12"></path>
+    </svg>
+    Додати користувача
+  </a>
+</section>
+
+<section class="table-card">
+  <table>
+    <colgroup>
+      <col style="width: 6%">
+      <col style="width: 24%">
+      <col style="width: 26%">
+      <col style="width: 14%">
+      <col style="width: 30%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Ім’я</th>
+        <th>Email</th>
+        <th>Роль</th>
+        <th>Дії</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each users}}
+        <tr>
+          <td class="center">{{id}}</td>
+          <td title="{{name}}">{{name}}</td>
+          <td title="{{email}}">{{email}}</td>
+          <td class="center">{{roleLabel}}</td>
+          <td class="actions-cell">
+            <a class="btn btn-small btn-ghost" href="/users/{{id}}/edit">Редагувати</a>
+            <button
+              type="button"
+              class="btn btn-small btn-ghost"
+              data-password
+              data-id="{{id}}"
+              data-name="{{name}}"
+            >Пароль</button>
+            {{#unless (eq id @root.currentId)}}
+              <button
+                type="button"
+                class="btn btn-small btn-danger"
+                data-delete
+                data-resource="users"
+                data-id="{{id}}"
+                data-name="{{name}}"
+              >Видалити</button>
+            {{/unless}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</section>

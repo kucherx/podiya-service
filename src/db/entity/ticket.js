@@ -8,7 +8,10 @@ export const Ticket = new EntitySchema({
     code: { type: String, length: 32, unique: true },
     status: { type: String, length: 32, default: 'available' },
     price: { type: 'real' },
+    quantity: { type: Number, default: 1 },
     purchasedAt: { type: 'datetime', nullable: true },
+    paidAt: { type: 'datetime', nullable: true },
+    checkedInAt: { type: 'datetime', nullable: true },
     createdAt: { type: Date, createDate: true }
   },
   relations: {

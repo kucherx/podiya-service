@@ -1,0 +1,62 @@
+<section class="page-head page-head-centered">
+  <div>
+    <h1>{{title}}</h1>
+  </div>
+</section>
+
+<form class="entity-form" method="post" action="{{action}}" novalidate data-ajax>
+  <section class="form-card">
+    <div class="form-grid">
+      <div class="field{{#if errors.email}} field-invalid{{/if}}">
+        <label for="user-email">Email <span class="req">*</span></label>
+        <input id="user-email" type="email" name="email" value="{{values.email}}" placeholder="user@gmail.com" autocomplete="off">
+        {{#if errors.email}}<p class="field-error">{{errors.email}}</p>{{/if}}
+      </div>
+
+      <div class="field{{#if errors.role}} field-invalid{{/if}}">
+        <label for="user-role">Роль <span class="req">*</span></label>
+        <select id="user-role" name="role" data-custom-select data-user-role data-placeholder="Оберіть роль">
+          {{#each roles}}
+            <option value="{{value}}"{{#if (eq value ../values.role)}} selected{{/if}}>{{label}}</option>
+          {{/each}}
+        </select>
+        {{#if errors.role}}<p class="field-error">{{errors.role}}</p>{{/if}}
+      </div>
+
+      <div class="field user-profile{{#if errors.organizerId}} field-invalid{{/if}}" data-profile="organizer"{{#unless (eq values.role 'organizer')}} hidden{{/unless}}>
+        <label for="user-organizer">Організатор</label>
+        <select id="user-organizer" name="organizerId" data-custom-select data-placeholder="Оберіть організатора">
+          <option value="">Оберіть організатора</option>
+          {{#each organizers}}
+            <option value="{{id}}"{{#if (eq id ../values.organizerId)}} selected{{/if}}>{{name}} — {{city}}</option>
+          {{/each}}
+        </select>
+        {{#if errors.organizerId}}<p class="field-error">{{errors.organizerId}}</p>{{/if}}
+      </div>
+
+      <div class="field user-profile{{#if errors.clientId}} field-invalid{{/if}}" data-profile="client"{{#unless (eq values.role 'client')}} hidden{{/unless}}>
+        <label for="user-client">Клієнт</label>
+        <select id="user-client" name="clientId" data-custom-select data-placeholder="Оберіть клієнта">
+          <option value="">Оберіть клієнта</option>
+          {{#each clients}}
+            <option value="{{id}}"{{#if (eq id ../values.clientId)}} selected{{/if}}>{{fullName}} — {{email}}</option>
+          {{/each}}
+        </select>
+        {{#if errors.clientId}}<p class="field-error">{{errors.clientId}}</p>{{/if}}
+      </div>
+
+      {{#unless isEdit}}
+        <div class="field{{#if errors.password}} field-invalid{{/if}}">
+          <label for="user-password">Початковий пароль <span class="req">*</span></label>
+          <input id="user-password" type="password" name="password" placeholder="Щонайменше 8 символів" autocomplete="new-password">
+          {{#if errors.password}}<p class="field-error">{{errors.password}}</p>{{/if}}
+        </div>
+      {{/unless}}
+    </div>
+
+    <div class="form-actions">
+      <a class="btn btn-ghost" href="/users">Скасувати</a>
+      <button class="btn btn-primary" type="submit">{{#if isEdit}}Зберегти зміни{{else}}Створити користувача{{/if}}</button>
+    </div>
+  </section>
+</form>

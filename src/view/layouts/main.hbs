@@ -18,8 +18,12 @@
   <link rel="stylesheet" href="/css/calendar.css">
   <link rel="stylesheet" href="/css/calendar-footer.css">
   <link rel="stylesheet" href="/css/modal.css">
+  <link rel="stylesheet" href="/css/password.css">
   <link rel="stylesheet" href="/css/auth.css">
   <link rel="stylesheet" href="/css/profile.css">
+  <link rel="stylesheet" href="/css/event.css">
+  <link rel="stylesheet" href="/css/event-buy.css">
+  <link rel="stylesheet" href="/css/event-tickets.css">
   <title>{{title}} — Менеджер подій</title>
 </head>
 <body>
@@ -47,7 +51,7 @@
               <small>{{roleLabel}}</small>
             </span>
           </a>
-          <form method="post" action="/auth/logout">
+          <form method="post" action="/auth/logout" novalidate>
             <button class="btn btn-ghost btn-small" type="submit">
               <svg class="nav-icon" aria-hidden="true"><use href="#icon-logout"></use></svg>
               Вийти
@@ -77,6 +81,7 @@
   </main>
   {{#unless currentUser}}{{> auth-modals}}{{/unless}}
   {{> delete-modal}}
+  {{#if (eq currentRole 'admin')}}{{> password-modal}}{{/if}}
   <script src="/js/auth.js" defer></script>
   <script src="/js/select.js" defer></script>
   <script src="/js/multi-select.js" defer></script>
@@ -84,6 +89,10 @@
   <script type="module" src="/js/date-picker.js"></script>
   <script src="/js/stepper.js" defer></script>
   <script src="/js/modal.js" defer></script>
+  <script src="/js/password-modal.js" defer></script>
+  <script src="/js/user-form.js" defer></script>
+  <script src="/js/row-link.js" defer></script>
+  <script src="/js/form-feedback.js" defer></script>
   <script src="/js/ajax.js" defer></script>
 </body>
 </html>

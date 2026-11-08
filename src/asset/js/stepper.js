@@ -24,10 +24,15 @@ function createStepper(input) {
 
   const change = (direction) => {
     const step = Number(input.step) || 1;
-    const current = input.value === '' ? 0 : Number(input.value);
+    const min = input.min === '' ? null : Number(input.min);
+    const max = input.max === '' ? null : Number(input.max);
+    const current = input.value === '' ? (min ?? 0) : Number(input.value);
     if (!Number.isFinite(current)) return;
     const decimals = (String(step).split('.')[1] || '').length;
-    input.value = Number((current + direction * step).toFixed(decimals));
+    let next = current + direction * step;
+    if (min !== null && next < min) next = min;
+    if (max !== null && next > max) next = max;
+    input.value = Number(next.toFixed(decimals));
     input.dispatchEvent(new Event('input', { bubbles: true }));
     input.dispatchEvent(new Event('change', { bubbles: true }));
   };

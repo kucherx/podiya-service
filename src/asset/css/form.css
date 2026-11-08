@@ -1,5 +1,7 @@
 .form-card {
-  max-width: 960px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 28px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -18,6 +20,10 @@
   flex-direction: column;
   gap: 7px;
   min-width: 0;
+}
+
+.field[hidden] {
+  display: none;
 }
 
 .field-wide {

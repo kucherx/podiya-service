@@ -17,18 +17,25 @@
   <table>
     <colgroup>
       {{#each widths}}<col style="width: {{this}}">{{/each}}
+      {{#if hasDetail}}<col class="details-width">{{/if}}
       {{#if canManage}}<col class="actions-width">{{/if}}
     </colgroup>
     <thead>
       <tr>
         {{#each columns}}<th>{{this}}</th>{{/each}}
+        {{#if hasDetail}}<th class="actions-col">Деталі</th>{{/if}}
         {{#if canManage}}<th class="actions-col">Дії</th>{{/if}}
       </tr>
     </thead>
     <tbody>
       {{#each items}}
-        <tr>
+        <tr{{#if @root.hasDetail}} class="row-link" data-detail="{{detailHref}}"{{/if}}>
           {{#each cells}}<td class="{{lookup @root.align @index}}" title="{{this}}">{{this}}</td>{{/each}}
+          {{#if @root.hasDetail}}
+            <td class="actions-cell">
+              <a class="btn btn-small btn-ghost" href="{{detailHref}}">Деталі</a>
+            </td>
+          {{/if}}
           {{#if @root.canManage}}
             <td class="actions-cell">
               <a class="btn btn-small btn-ghost" href="{{editHref}}">Редагувати</a>

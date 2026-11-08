@@ -1,0 +1,27 @@
+.event-section .table-card {
+  overflow-x: auto;
+}
+
+.event-section .table-card table {
+  min-width: 1100px;
+  table-layout: auto;
+}
+
+.event-section .table-card th,
+.event-section .table-card td {
+  text-align: center;
+}
+
+.event-section .actions-cell {
+  text-align: center;
+}
+
+.event-section .actions-cell form {
+  display: inline-block;
+  margin-left: 4px;
+}
+
+.ticket-highlight {
+  background: var(--teal-soft) !important;
+  box-shadow: inset 3px 0 0 var(--teal);
+}

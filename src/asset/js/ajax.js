@@ -38,53 +38,11 @@
     document.body.classList.remove('modal-open');
   }
 
-  function showDeleteError(message) {
-    const card = document.querySelector('.modal-card');
-    if (!card) return;
-    card.querySelector('.ajax-delete-error')?.remove();
-    const box = document.createElement('div');
-    box.className = 'alert alert-error ajax-delete-error';
-    box.textContent = message;
-    card.querySelector('#delete-form')?.before(box);
-  }
-
-  function showAuthErrors(modalName, errors = {}, values = {}) {
-    const root = document.getElementById('auth-modal');
-    if (!root) return;
-
-    root.hidden = false;
-    document.body.classList.add('modal-open');
-    root.querySelectorAll('[data-auth-card]').forEach((card) => {
-      card.hidden = card.dataset.authCard !== modalName;
-    });
-
-    const card = root.querySelector(`[data-auth-card="${modalName}"]`);
-    if (!card) return;
-    card.querySelectorAll('[data-ajax-error], .auth-ajax-alert').forEach((node) => node.remove());
-
-    if (errors._form) {
-      const box = document.createElement('div');
-      box.className = 'alert alert-error auth-ajax-alert';
-      box.textContent = errors._form;
-      card.querySelector('form')?.before(box);
-    }
-
-    for (const [name, message] of Object.entries(errors)) {
-      if (name === '_form') continue;
-      const input = card.querySelector(`[name="${name}"]`);
-      if (!input) continue;
-      const error = document.createElement('p');
-      error.className = 'field-error';
-      error.dataset.ajaxError = '1';
-      error.textContent = message;
-      input.insertAdjacentElement('afterend', error);
-    }
-
-    for (const [name, value] of Object.entries(values)) {
-      const input = card.querySelector(`[name="${name}"]`);
-      if (input && input.type !== 'password') input.value = value;
-    }
-  }
+  document.addEventListener('input', (event) => {
+    const form = event.target.closest('form[data-ajax]');
+    if (!form) return;
+    form.querySelectorAll('[data-ajax-field-error]').forEach((node) => node.remove());
+  });
 
   document.addEventListener('submit', async (event) => {
     const form = event.target.closest('form[data-ajax]');
@@ -110,9 +68,10 @@
         const data = await response.json();
 
         if (!data.ok) {
-          if (data.modal) showAuthErrors(data.modal, data.errors, data.values);
-          else if (form.id === 'delete-form') showDeleteError(data.message || 'Не вдалося видалити запис.');
-          else showDeleteError(data.message || 'Не вдалося виконати дію.');
+          if (data.modal) window.formFeedback.showAuthErrors(data.modal, data.errors, data.values);
+          else if (form.id === 'delete-form') window.formFeedback.showDeleteError(data.message || 'Не вдалося видалити запис.');
+          else if (data.field) window.formFeedback.showFieldError(form, data.field, data.message || 'Некоректне значення.');
+          else window.formFeedback.showFormError(form, data.message || 'Не вдалося виконати дію.');
           return;
         }
 
