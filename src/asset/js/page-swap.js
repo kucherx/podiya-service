@@ -24,6 +24,9 @@
     initComponents();
     window.tablePage?.init();
     window.usersPage?.init();
+    window.eventPage?.init();
+    window.profilePage?.init();
+    window.formPage?.init();
     window.scrollTo({ top: 0 });
   }
 

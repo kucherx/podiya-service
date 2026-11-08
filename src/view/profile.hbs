@@ -1,7 +1,7 @@
-<section class="page-head">
+<section class="page-head" data-profile-page>
   <div>
     <h1>Профіль</h1>
-    <p class="subtitle">{{info.name}} · {{roleLabel}}</p>
+    <p class="subtitle"><span data-profile-name></span> · {{roleLabel}}</p>
   </div>
 </section>
 
@@ -10,14 +10,14 @@
     <svg viewBox="0 0 24 24"><use href="#icon-profile"></use></svg>
   </div>
   <div class="profile-summary-main">
-    <h2>{{info.name}}</h2>
+    <h2 data-profile-name></h2>
     <span>{{roleLabel}}</span>
   </div>
   <dl class="profile-facts">
-    <div><dt>Email</dt><dd>{{info.email}}</dd></div>
-    {{#if info.phone}}<div><dt>Телефон</dt><dd>{{info.phone}}</dd></div>{{/if}}
-    {{#if info.city}}<div><dt>Місто</dt><dd>{{info.city}}</dd></div>{{/if}}
-    {{#if info.website}}<div><dt>Сайт</dt><dd>{{info.website}}</dd></div>{{/if}}
+    <div><dt>Email</dt><dd data-profile-email></dd></div>
+    <div data-profile-fact="phone"><dt>Телефон</dt><dd data-profile-phone></dd></div>
+    <div data-profile-fact="city"><dt>Місто</dt><dd data-profile-city></dd></div>
+    <div data-profile-fact="website"><dt>Сайт</dt><dd data-profile-website></dd></div>
   </dl>
 </section>
 
@@ -30,7 +30,7 @@
       <div class="alert alert-error">{{profileErrors._form}}</div>
     {{/if}}
 
-    <form method="post" action="/api/profile" novalidate data-ajax data-api data-method="PATCH" data-redirect="/profile">
+    <form method="post" action="/profile" novalidate data-ajax data-api data-api-action="/api/profile" data-method="PATCH" data-redirect="/profile" data-profile-form>
       <div class="form-grid">
         {{#each fields}}
           <div class="field{{#if wide}} field-wide{{/if}}{{#if error}} field-invalid{{/if}}">
@@ -63,7 +63,7 @@
     <h2>Зміна пароля</h2>
     <p class="profile-hint">Використовуйте пароль довжиною щонайменше 8 символів.</p>
 
-    <form method="post" action="/api/profile/password" novalidate data-ajax data-api data-redirect="/profile">
+    <form method="post" action="/profile" novalidate data-ajax data-api data-api-action="/api/profile/password" data-redirect="/profile">
       <div class="field{{#if passwordErrors.currentPassword}} field-invalid{{/if}}">
         <label for="current-password">Поточний пароль</label>
         <input id="current-password" type="password" name="currentPassword" autocomplete="current-password">

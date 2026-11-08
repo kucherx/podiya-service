@@ -4,7 +4,7 @@
 
 ## Про проєкт
 
-Реалізовано модель даних, CRUD-форми, серверну валідацію, авторизацію за ролями, захищені маршрути та профіль користувача. Дані зберігаються в SQLite, доступ до них виконується через TypeORM, сторінки рендеряться Handlebars.js. Списки, форми, авторизація, профіль і керування користувачами працюють через REST API.
+Реалізовано модель даних, CRUD-форми, серверну валідацію, авторизацію за ролями, захищені маршрути та профіль користувача. Дані зберігаються в SQLite, доступ до них виконується через TypeORM, сторінки рендеряться Handlebars.js. Усі дані на сторінках — списки, деталі, форми, профіль, користувачі, авторизація та дії з квитками — отримуються й змінюються через REST API.
 
 ## Стек
 
@@ -67,6 +67,7 @@
 | POST | `/api/users/:id/password` | генерація нового пароля |
 | POST | `/api/tickets/:id/pay`, `/check-in`, `/cancel` | оплата, присутність, скасування |
 | GET | `/api/reference/event-form` | локації та категорії для форми події |
+| GET | `/api/reference/form/:resource` | довідники для полів форми |
 | GET | `/api/:resource` | список записів |
 | GET | `/api/:resource/:id` | один запис |
 | POST | `/api/:resource` | створити запис |
@@ -111,7 +112,7 @@ npm start
 ## Маршрути
 
 - `GET /`, `GET /events` — список подій;
-- `GET /events/:id` — деталі події та купівля квитка;
+- `GET /events/:id` — сторінка деталей події; дані завантажуються через `/api/events/:id` і `/api/tickets`;
 - `GET /tickets` — квитки з урахуванням ролі;
 - `GET /users` — керування користувачами (адміністратор);
 - `GET /profile` — профіль авторизованого користувача;
@@ -122,7 +123,7 @@ npm start
 - `GET/PATCH /api/profile`, `POST /api/profile/password` — профіль;
 - CRUD-маршрути `/api/users` — лише адміністратор;
 - `POST /api/tickets/:id/pay`, `/check-in`, `/cancel` — дії з квитками;
-- `GET /api/reference/event-form` — довідники для форми події;
+- `GET /api/reference/event-form`, `/api/reference/form/:resource` — довідники для форм;
 - `GET/POST /api/:resource`, `GET/PUT/PATCH/DELETE /api/:resource/:id` — REST API;
 - `GET /api/:resource/:id/related` — дані для модального вікна видалення;
 - `GET /health` — перевірка бази даних.
@@ -137,17 +138,17 @@ src/
                   profile, users, tickets, reference)
   auth/           roles.js, passwords.js, access.js, passport.js,
                   middleware.js, user-view.js
-  controller/     table.js, form.js, record.js, auth.js, profile.js,
-                  admin-user.js, admin-user-form.js, event.js, ticket-action.js
+  controller/     table.js, form.js, record.js, profile.js,
+                  admin-user.js, admin-user-form.js, event.js
   db/             data-source.js
     entity/       client.js, event.js, location.js, organizer.js,
                   ticket-category.js, ticket.js, user.js, index.js
     seed/         index.js, run.js
       data/       clients.js, events.js, locations.js, organizers.js,
                   categories.js, users.js
-  lib/            messages.js, request.js, render-error.js
-  service/        form-fields.js, relations.js, ticket-code.js, ticket-stock.js,
-                  admin-users.js
+  lib/            messages.js, render-error.js
+  service/        form-config.js, form-fields.js, relations.js, ticket-code.js,
+                  ticket-stock.js, admin-users.js
   validation/     validate.js, values.js, unique.js, db-errors.js
   view/           table.hbs, form.hbs, profile.hbs, users.hbs, user-form.hbs,
                   event.hbs, error.hbs, table-config.js, format.js, navigation.js,
@@ -160,7 +161,8 @@ src/
                   modal, auth, profile, password, event, event-buy, event-tickets
     js/           select, multi-select, phone-hint, date-utils, date-picker,
                   stepper, modal, auth, ajax, page-swap, form-feedback,
-                  password-modal, user-form, table-page, users-page, row-link
+                  password-modal, user-form, form-page, table-page, users-page,
+                  event-view, event-page, profile-page, row-link
 ```
 
 Файл бази даних: `storage/podiya.sqlite`. SQL-схема: `schema.sql`.

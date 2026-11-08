@@ -50,7 +50,7 @@
       options.body = JSON.stringify(payload(form));
     }
 
-    const response = await fetch(form.action, options);
+    const response = await fetch(form.dataset.apiAction || form.action, options);
     if (response.status === 204) {
       if (form.id === 'delete-form') closeDeleteModal();
       await window.pageSwap.swapPage(form.dataset.redirect || location.pathname);

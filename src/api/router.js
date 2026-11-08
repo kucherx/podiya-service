@@ -15,12 +15,13 @@ import {
   resetPassword,
   updateUser
 } from './controllers/users.js';
-import { eventFormReference } from './controllers/reference.js';
+import { eventFormReference, formReference } from './controllers/reference.js';
 
 const apiRouter = Router();
 
 apiRouter.get('/', apiIndex);
 apiRouter.get('/reference/event-form', eventFormReference);
+apiRouter.get('/reference/form/:resource', formReference);
 
 apiRouter.post('/auth/login', login);
 apiRouter.post('/auth/register', register);

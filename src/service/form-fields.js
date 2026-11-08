@@ -1,32 +1,6 @@
 import { AppDataSource } from '../db/data-source.js';
-import { formatDateDisplay, formatInputDateTime } from '../view/format.js';
 
-function relationNames(config) {
-  return Object.fromEntries(
-    config.fields.filter((field) => field.relation).map((field) => [field.name, true])
-  );
-}
-
-function rawValue(field, record, values) {
-  if (values) {
-    const raw = values[field.name];
-    if (field.type === 'multiselect') {
-      if (Array.isArray(raw)) return raw;
-      return raw ? [raw] : [];
-    }
-    return raw ?? '';
-  }
-  if (!record) {
-    if (field.default !== undefined) return String(field.default);
-    return field.type === 'multiselect' ? [] : '';
-  }
-  if (field.type === 'multiselect') return (record[field.name] || []).map((item) => item.id);
-  if (field.relation) return record[field.name]?.id ?? '';
-  if (field.type === 'datetime') return formatInputDateTime(record[field.name]);
-  return record[field.name] ?? '';
-}
-
-async function loadOptions(field, value, user) {
+export async function loadOptions(field, value, user) {
   const selected = field.type === 'multiselect'
     ? (Array.isArray(value) ? value.map(String) : [])
     : [String(value)];
@@ -60,28 +34,22 @@ async function loadOptions(field, value, user) {
   });
 }
 
-export async function loadRecord(config, id) {
-  return AppDataSource.getRepository(config.entity).findOne({
-    where: { id },
-    relations: relationNames(config)
-  });
-}
-
-export async function buildFields(config, record, values, errors, user) {
-  const fields = [];
-
-  for (const field of config.fields) {
-    const value = rawValue(field, record, values);
-    fields.push({
+export function buildFieldDefinitions(config) {
+  return config.fields.map((field) => {
+    const defaultValue = field.default !== undefined ? String(field.default) : '';
+    return {
       ...field,
-      value: Array.isArray(value) ? '' : String(value),
-      display: field.type === 'datetime' ? formatDateDisplay(value) : '',
+      value: field.type === 'multiselect' ? '' : defaultValue,
+      display: '',
       inputType: ['email', 'tel', 'url', 'number'].includes(field.type) ? field.type : 'text',
       prompt: field.placeholder || 'Оберіть значення',
-      options: await loadOptions(field, value, user),
-      error: errors?.[field.name] || ''
-    });
-  }
-
-  return fields;
+      options: field.relation
+        ? []
+        : (field.options || []).map((option) => ({
+          ...option,
+          selected: String(option.value) === defaultValue
+        })),
+      error: ''
+    };
+  });
 }

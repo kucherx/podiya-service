@@ -14,7 +14,7 @@
   <div class="alert alert-error" role="alert">{{errors._form}}</div>
 {{/if}}
 
-<form class="entity-form" method="post" action="{{apiAction}}" novalidate data-ajax data-api data-method="{{#if isEdit}}PUT{{else}}POST{{/if}}" data-redirect="{{redirect}}">
+<form class="entity-form" method="post" action="{{redirect}}" novalidate data-ajax data-api data-api-action="{{apiAction}}" data-method="{{#if isEdit}}PUT{{else}}POST{{/if}}" data-redirect="{{redirect}}" data-form-page data-form-resource="{{resource}}" data-form-id="{{recordId}}">
   <section class="form-card">
     <div class="form-grid">
       {{#each fields}}
@@ -25,7 +25,7 @@
           </label>
 
           {{#if (eq type 'multiselect')}}
-            <div class="multi-select" data-multiselect>
+            <div class="multi-select" data-multiselect data-multiselect-name="{{name}}">
               <input
                 type="search"
                 class="multi-search"

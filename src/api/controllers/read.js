@@ -1,5 +1,6 @@
 import { AppDataSource } from '../../db/data-source.js';
 import { ROLES } from '../../auth/roles.js';
+import { occupiedCount } from '../../service/ticket-stock.js';
 import { getResource } from '../resources.js';
 import { applyListQuery, jsonError, parseId } from '../helpers.js';
 import { canReadRecord, readScope } from '../access.js';
@@ -36,5 +37,13 @@ export async function read(req, res) {
   if (!canReadRecord(roleOf(req), resource.key, row, req.user)) {
     return jsonError(res, 403, 'Доступ заборонено.');
   }
+
+  if (resource.key === 'events') {
+    row.categories = await Promise.all(row.categories.map(async (category) => ({
+      ...category,
+      available: Math.max(0, category.quantity - await occupiedCount(row.id, category.id))
+    })));
+  }
+
   return res.json(row);
 }

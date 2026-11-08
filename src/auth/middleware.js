@@ -24,11 +24,6 @@ export function authLocals(req, res, next) {
   next();
 }
 
-export function requireGuest(req, res, next) {
-  if (req.isAuthenticated?.()) return res.redirect('/profile');
-  next();
-}
-
 export function requireAuth(req, res, next) {
   if (req.isAuthenticated?.()) return next();
 

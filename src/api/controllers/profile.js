@@ -28,16 +28,21 @@ function recordFor(user) {
 
 export function getProfile(req, res) {
   if (!req.user) return jsonError(res, 401, 'Потрібна авторизація.');
+  const record = req.user.role === ROLES.ADMIN
+    ? { email: req.user.email }
+    : recordFor(req.user);
   return res.json({
     id: req.user.id,
     role: req.user.role,
     ...publicInfo(req.user),
     clientId: req.user.client?.id || null,
-    organizerId: req.user.organizer?.id || null
+    organizerId: req.user.organizer?.id || null,
+    record
   });
 }
 
 export async function updateProfile(req, res) {
+  if (!req.user) return jsonError(res, 401, 'Потрібна авторизація.');
   const config = configFor(req.user);
   const record = recordFor(req.user);
   const { errors, data } = await validate(config, req.body, record.id);
@@ -74,6 +79,7 @@ export async function updateProfile(req, res) {
 }
 
 export async function updatePassword(req, res) {
+  if (!req.user) return jsonError(res, 401, 'Потрібна авторизація.');
   const current = String(req.body.currentPassword || '');
   const next = String(req.body.newPassword || '');
   const confirm = String(req.body.confirmPassword || '');
