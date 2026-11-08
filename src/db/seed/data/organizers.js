@@ -1,6 +1,7 @@
 export const organizers = [
   {
     name: 'Студія «Тло»',
+    city: 'Київ',
     email: 'hello@tlo.ua',
     phone: '+380 44 123 45 67',
     website: 'https://tlo.ua',
@@ -8,6 +9,7 @@ export const organizers = [
   },
   {
     name: 'Львівська міська рада культури',
+    city: 'Львів',
     email: 'culture@lviv.ua',
     phone: '+380 32 297 57 00',
     website: 'https://culture.lviv.ua',
@@ -15,6 +17,7 @@ export const organizers = [
   },
   {
     name: 'Dnipro Art Cluster',
+    city: 'Дніпро',
     email: 'team@dniproart.club',
     phone: '+380 56 789 12 34',
     website: 'https://dniproart.club',
@@ -22,6 +25,7 @@ export const organizers = [
   },
   {
     name: 'Odesa Sound Bureau',
+    city: 'Одеса',
     email: 'booking@odesasound.ua',
     phone: '+380 48 700 11 22',
     website: 'https://odesasound.ua',
@@ -29,6 +33,7 @@ export const organizers = [
   },
   {
     name: 'Kharkiv Music Fest',
+    city: 'Харків',
     email: 'info@kharkivmusic.fest',
     phone: '+380 57 705 33 44',
     website: 'https://kharkivmusic.fest',

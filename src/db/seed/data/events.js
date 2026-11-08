@@ -7,11 +7,7 @@ export const events = [
     status: 'published',
     location: 0,
     organizer: 0,
-    categories: [
-      { name: 'Стандарт', price: 450, quantity: 120 },
-      { name: 'Преміум', price: 750, quantity: 60 },
-      { name: 'VIP', price: 1200, quantity: 24 }
-    ]
+    categories: ['Стандарт', 'Преміум', 'VIP']
   },
   {
     title: 'Фестиваль незалежного кіно',
@@ -21,11 +17,7 @@ export const events = [
     status: 'published',
     location: 1,
     organizer: 1,
-    categories: [
-      { name: 'Стандарт', price: 300, quantity: 200 },
-      { name: 'Студентський', price: 180, quantity: 80 },
-      { name: 'Преміум', price: 550, quantity: 50 }
-    ]
+    categories: ['Стандарт', 'Студентський', 'Преміум']
   },
   {
     title: 'Виставка «Місто в деталях»',
@@ -35,11 +27,7 @@ export const events = [
     status: 'published',
     location: 2,
     organizer: 2,
-    categories: [
-      { name: 'Денний', price: 250, quantity: 300 },
-      { name: 'Повний', price: 400, quantity: 150 },
-      { name: 'Екскурсія', price: 600, quantity: 40 }
-    ]
+    categories: ['Денний', 'Повний', 'Екскурсія']
   },
   {
     title: 'Літературний вечір «Тиша»',
@@ -49,11 +37,7 @@ export const events = [
     status: 'published',
     location: 4,
     organizer: 4,
-    categories: [
-      { name: 'Стандарт', price: 350, quantity: 100 },
-      { name: 'Преміум', price: 600, quantity: 40 },
-      { name: 'VIP', price: 900, quantity: 20 }
-    ]
+    categories: ['Стандарт', 'Преміум', 'VIP']
   },
   {
     title: 'Stand-up: Нові обличчя',
@@ -63,11 +47,7 @@ export const events = [
     status: 'draft',
     location: 0,
     organizer: 0,
-    categories: [
-      { name: 'Стандарт', price: 400, quantity: 150 },
-      { name: 'Front row', price: 700, quantity: 30 },
-      { name: 'Студентський', price: 250, quantity: 50 }
-    ]
+    categories: ['Стандарт', 'Front row', 'Студентський']
   },
   {
     title: 'Форум креативних індустрій',
@@ -77,10 +57,6 @@ export const events = [
     status: 'draft',
     location: 3,
     organizer: 3,
-    categories: [
-      { name: 'Стандарт', price: 500, quantity: 250 },
-      { name: 'Бізнес', price: 900, quantity: 100 },
-      { name: 'Студентський', price: 300, quantity: 80 }
-    ]
+    categories: ['Стандарт', 'Бізнес', 'Студентський']
   }
 ];

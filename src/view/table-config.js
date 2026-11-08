@@ -4,10 +4,11 @@ export const tableConfig = {
   events: {
     entity: 'Event',
     title: 'Події',
-    columns: ['ID', 'Назва', 'Локація', 'Організатор', 'Початок', 'Статус'],
-    center: [0, 4, 5],
-    widths: ['6%', '28%', '20%', '20%', '13%', '13%'],
-    relations: { location: true, organizer: true },
+    label: (event) => event.title,
+    columns: ['ID', 'Назва', 'Локація', 'Організатор', 'Початок', 'Категорії', 'Статус'],
+    center: [0, 4, 6],
+    widths: ['5%', '24%', '17%', '18%', '12%', '14%', '10%'],
+    relations: { location: true, organizer: true, categories: true },
     order: { startsAt: 'ASC' },
     row: (event) => [
       event.id,
@@ -15,12 +16,14 @@ export const tableConfig = {
       event.location?.name || '',
       event.organizer?.name || '',
       formatDate(event.startsAt),
+      (event.categories || []).map((category) => category.name).join(', '),
       formatStatus(event.status)
     ]
   },
   locations: {
     entity: 'Location',
     title: 'Локації',
+    label: (location) => location.name,
     columns: ['ID', 'Назва', 'Місто', 'Адреса', 'Місткість'],
     center: [0, 4],
     widths: ['6%', '26%', '18%', '40%', '10%'],
@@ -36,13 +39,15 @@ export const tableConfig = {
   organizers: {
     entity: 'Organizer',
     title: 'Організатори',
-    columns: ['ID', 'Назва', 'Email', 'Телефон', 'Сайт'],
-    center: [0, 3],
-    widths: ['6%', '26%', '30%', '14%', '24%'],
+    label: (organizer) => organizer.name,
+    columns: ['ID', 'Назва', 'Місто', 'Email', 'Телефон', 'Сайт'],
+    center: [0, 4],
+    widths: ['5%', '24%', '16%', '24%', '15%', '16%'],
     order: { name: 'ASC' },
     row: (organizer) => [
       organizer.id,
       organizer.name,
+      organizer.city,
       organizer.email,
       organizer.phone,
       organizer.website || ''
@@ -51,22 +56,24 @@ export const tableConfig = {
   categories: {
     entity: 'TicketCategory',
     title: 'Категорії квитків',
-    columns: ['ID', 'Подія', 'Назва', 'Ціна', 'Кількість'],
-    center: [0, 3, 4],
-    widths: ['6%', '34%', '24%', '14%', '22%'],
-    relations: { event: true },
+    label: (category) => category.name,
+    columns: ['ID', 'Назва', 'Ціна', 'Кількість', 'Подій'],
+    center: [0, 2, 3, 4],
+    widths: ['7%', '35%', '18%', '16%', '24%'],
+    relations: { events: true },
     order: { name: 'ASC' },
     row: (category) => [
       category.id,
-      category.event?.title || '',
       category.name,
       formatMoney(category.price),
-      category.quantity
+      category.quantity,
+      category.events?.length || 0
     ]
   },
   tickets: {
     entity: 'Ticket',
     title: 'Квитки',
+    label: (ticket) => ticket.code,
     columns: ['ID', 'Код', 'Подія', 'Категорія', 'Клієнт', 'Статус', 'Ціна'],
     center: [0, 1, 5, 6],
     widths: ['5%', '12%', '27%', '14%', '16%', '14%', '12%'],
@@ -85,6 +92,7 @@ export const tableConfig = {
   clients: {
     entity: 'Client',
     title: 'Клієнти',
+    label: (client) => client.fullName,
     columns: ['ID', 'ПІБ', 'Email', 'Телефон', 'Місто'],
     center: [0, 3],
     widths: ['6%', '24%', '30%', '15%', '25%'],

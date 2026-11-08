@@ -1,0 +1,44 @@
+.number-control {
+  position: relative;
+  display: flex;
+}
+
+.number-control input {
+  padding-right: 72px;
+}
+
+.number-actions {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  gap: 2px;
+}
+
+.number-step {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.number-step:hover {
+  background: var(--teal-soft);
+  color: var(--teal);
+}
+
+.number-step svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}

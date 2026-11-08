@@ -2,20 +2,53 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="stylesheet" href="/main.css">
-  <title>{{title}} — Podiya</title>
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/nav.css">
+  <link rel="stylesheet" href="/css/controls.css">
+  <link rel="stylesheet" href="/css/table.css">
+  <link rel="stylesheet" href="/css/form.css">
+  <link rel="stylesheet" href="/css/multi-select.css">
+  <link rel="stylesheet" href="/css/hints.css">
+  <link rel="stylesheet" href="/css/stepper.css">
+  <link rel="stylesheet" href="/css/select.css">
+  <link rel="stylesheet" href="/css/date.css">
+  <link rel="stylesheet" href="/css/calendar.css">
+  <link rel="stylesheet" href="/css/calendar-footer.css">
+  <link rel="stylesheet" href="/css/modal.css">
+  <title>{{title}} — Менеджер подій</title>
 </head>
 <body>
-  <header>
-    <nav>
-      {{#each nav}}
-        <a href="{{href}}"{{#if (eq key @root.active)}} aria-current="page"{{/if}}>{{label}}</a>
-      {{/each}}
-    </nav>
+  {{> icons}}
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/">
+        <img class="brand-mark" src="/favicon.svg" alt="">
+        <span class="brand-name">Менеджер подій</span>
+      </a>
+      <nav class="nav">
+        {{#each nav}}
+          <a href="{{href}}"{{#if (eq key @root.active)}} aria-current="page"{{/if}}>
+            <svg class="nav-icon" aria-hidden="true"><use href="#icon-{{key}}"></use></svg>
+            <span>{{label}}</span>
+          </a>
+        {{/each}}
+      </nav>
+    </div>
   </header>
-  <main>
+  <main class="page">
+    {{#if message}}
+      <div class="alert alert-{{message.type}}" role="status">{{message.text}}</div>
+    {{/if}}
     {{{body}}}
   </main>
+  {{> delete-modal}}
+  <script src="/js/select.js" defer></script>
+  <script src="/js/multi-select.js" defer></script>
+  <script src="/js/phone-hint.js" defer></script>
+  <script type="module" src="/js/date-picker.js"></script>
+  <script src="/js/stepper.js" defer></script>
+  <script src="/js/modal.js" defer></script>
 </body>
 </html>

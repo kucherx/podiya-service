@@ -31,9 +31,14 @@ export const Event = new EntitySchema({
       onDelete: 'RESTRICT'
     },
     categories: {
-      type: 'one-to-many',
+      type: 'many-to-many',
       target: 'TicketCategory',
-      inverseSide: 'event'
+      inverseSide: 'events',
+      joinTable: {
+        name: 'event_categories',
+        joinColumn: { name: 'event_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'category_id', referencedColumnName: 'id' }
+      }
     },
     tickets: {
       type: 'one-to-many',

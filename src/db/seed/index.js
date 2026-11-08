@@ -1,7 +1,8 @@
-import { locations } from './data/locations.data.js';
-import { organizers } from './data/organizers.data.js';
-import { clients } from './data/clients.data.js';
-import { events } from './data/events.data.js';
+import { locations } from './data/locations.js';
+import { organizers } from './data/organizers.js';
+import { clients } from './data/clients.js';
+import { categories } from './data/categories.js';
+import { events } from './data/events.js';
 
 function ticketCode(eventIndex, categoryIndex, ticketIndex) {
   const eventPart = String(eventIndex + 1).padStart(2, '0');
@@ -17,8 +18,10 @@ export async function seed(dataSource) {
   const savedLocations = await locationRepo.save(locations);
   const savedOrganizers = await dataSource.getRepository('Organizer').save(organizers);
   const savedClients = await dataSource.getRepository('Client').save(clients);
-  const eventRepo = dataSource.getRepository('Event');
   const categoryRepo = dataSource.getRepository('TicketCategory');
+  const savedCategories = await categoryRepo.save(categories);
+  const categoryByName = Object.fromEntries(savedCategories.map((category) => [category.name, category]));
+  const eventRepo = dataSource.getRepository('Event');
   const ticketRepo = dataSource.getRepository('Ticket');
 
   for (let eventIndex = 0; eventIndex < events.length; eventIndex += 1) {
@@ -30,22 +33,13 @@ export async function seed(dataSource) {
       endsAt: new Date(item.endsAt),
       status: item.status,
       location: savedLocations[item.location],
-      organizer: savedOrganizers[item.organizer]
+      organizer: savedOrganizers[item.organizer],
+      categories: item.categories.map((name) => categoryByName[name])
     });
 
-    const categories = await categoryRepo.save(
-      item.categories.map((category) => ({
-        event,
-        name: category.name,
-        description: `Категорія «${category.name}» для події «${item.title}».`,
-        price: category.price,
-        quantity: category.quantity
-      }))
-    );
-
     const tickets = [];
-    for (let categoryIndex = 0; categoryIndex < categories.length; categoryIndex += 1) {
-      const category = categories[categoryIndex];
+    for (let categoryIndex = 0; categoryIndex < item.categories.length; categoryIndex += 1) {
+      const category = categoryByName[item.categories[categoryIndex]];
       for (let ticketIndex = 0; ticketIndex < 3; ticketIndex += 1) {
         const isSold = ticketIndex === 0;
         const isReserved = ticketIndex === 2;

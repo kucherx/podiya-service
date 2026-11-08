@@ -1,0 +1,107 @@
+<nav class="crumbs">
+  <a href="{{cancelHref}}">{{config.title}}</a>
+  <span class="crumb-sep">/</span>
+  <span>{{title}}</span>
+</nav>
+
+<section class="page-head">
+  <div>
+    <h1>{{title}}</h1>
+  </div>
+</section>
+
+{{#if errors._form}}
+  <div class="alert alert-error" role="alert">{{errors._form}}</div>
+{{/if}}
+
+<form class="entity-form" method="post" action="{{action}}" novalidate>
+  <section class="form-card">
+    <div class="form-grid">
+      {{#each fields}}
+        <div class="field{{#if wide}} field-wide{{/if}}{{#if error}} field-invalid{{/if}}">
+          <label for="field-{{name}}">
+            {{label}}
+            {{#if required}}<span class="req">*</span>{{/if}}
+          </label>
+
+          {{#if (eq type 'multiselect')}}
+            <div class="multi-select" data-multiselect>
+              <input
+                type="search"
+                class="multi-search"
+                placeholder="Пошук категорій..."
+                aria-label="Пошук у списку категорій"
+              >
+              <div class="multi-options">
+                {{#each options}}
+                  <label class="multi-option">
+                    <input type="checkbox" name="{{../name}}" value="{{value}}"{{#if selected}} checked{{/if}}>
+                    <span>{{label}}</span>
+                  </label>
+                {{/each}}
+                <p class="multi-empty" hidden>Нічого не знайдено</p>
+              </div>
+              <p class="multi-count">Обрано: <span class="multi-count-value">0</span></p>
+            </div>
+          {{else if (eq type 'textarea')}}
+            <textarea
+              id="field-{{name}}"
+              name="{{name}}"
+              rows="{{rows}}"
+              placeholder="{{placeholder}}"
+            >{{value}}</textarea>
+          {{else if (eq type 'select')}}
+            <select
+              id="field-{{name}}"
+              name="{{name}}"
+              data-custom-select
+              data-placeholder="{{prompt}}"
+              data-depends-on="{{dependsOn}}"
+            >
+              <option value="">{{prompt}}</option>
+              {{#each options}}
+                <option value="{{value}}" data-events="{{dataEvents}}"{{#if selected}} selected{{/if}}>{{label}}</option>
+              {{/each}}
+            </select>
+          {{else if (eq type 'datetime')}}
+            <div class="date-control" data-datepicker>
+              <input type="hidden" name="{{name}}" value="{{value}}">
+              <input
+                type="text"
+                class="date-display"
+                id="field-{{name}}"
+                value="{{display}}"
+                placeholder="Оберіть дату й час"
+                readonly
+              >
+              <button type="button" class="date-toggle" aria-label="Відкрити календар">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <rect x="3" y="4.5" width="14" height="12" rx="2"></rect>
+                  <path d="M3 8h14M7 2.5v4M13 2.5v4"></path>
+                </svg>
+              </button>
+              <div class="date-popover" hidden></div>
+            </div>
+          {{else}}
+            <input
+              id="field-{{name}}"
+              type="{{inputType}}"
+              name="{{name}}"
+              value="{{value}}"
+              placeholder="{{placeholder}}"
+              {{#if step}}step="{{step}}"{{/if}}
+              autocomplete="off"
+            >
+          {{/if}}
+
+          {{#if error}}<p class="field-error">{{error}}</p>{{/if}}
+        </div>
+      {{/each}}
+    </div>
+
+    <div class="form-actions">
+      <a class="btn btn-ghost" href="{{cancelHref}}">Скасувати</a>
+      <button class="btn btn-primary" type="submit">{{submitLabel}}</button>
+    </div>
+  </section>
+</form>

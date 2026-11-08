@@ -18,5 +18,6 @@ export const Location = new EntitySchema({
       inverseSide: 'location'
     }
   },
-  indices: [{ columns: ['city'] }]
+  indices: [{ columns: ['city'] }],
+  uniques: [{ columns: ['name', 'city'] }]
 });

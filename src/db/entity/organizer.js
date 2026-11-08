@@ -6,6 +6,7 @@ export const Organizer = new EntitySchema({
   columns: {
     id: { type: Number, primary: true, generated: true },
     name: { type: String, length: 160 },
+    city: { type: String, length: 100 },
     email: { type: String, length: 160, unique: true },
     phone: { type: String, length: 32 },
     website: { type: String, length: 255, nullable: true },
@@ -18,5 +19,6 @@ export const Organizer = new EntitySchema({
       target: 'Event',
       inverseSide: 'organizer'
     }
-  }
+  },
+  uniques: [{ columns: ['city', 'name'] }]
 });
