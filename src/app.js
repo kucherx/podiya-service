@@ -1,4 +1,5 @@
 import express from 'express';
+import session from 'express-session';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { engine } from 'express-handlebars';
@@ -6,11 +7,17 @@ import { AppDataSource } from './db/data-source.js';
 import { listTable } from './controller/table.js';
 import { showForm, saveForm } from './controller/form.js';
 import { deleteRecord, relatedInfo } from './controller/record.js';
-import { formConfig } from './view/forms/index.js';
-import { navigation } from './view/navigation.js';
+import { postLogin, postRegister, logout } from './controller/auth.js';
+import { showProfile, updateProfile, updatePassword } from './controller/profile.js';
+import { authLocals, requireAuth, requireGuest, requireRole } from './auth/middleware.js';
+import passport from './auth/passport.js';
+import { ROLES } from './auth/roles.js';
+import { navigationFor } from './view/navigation.js';
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
+const staff = requireRole(ROLES.ADMIN, ROLES.ORGANIZER);
+const admin = requireRole(ROLES.ADMIN);
 
 app.engine('hbs', engine({
   extname: '.hbs',
@@ -27,23 +34,53 @@ app.set('views', path.join(currentDir, 'view'));
 app.use(express.static(path.join(currentDir, 'asset')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'podiya-session-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true, sameSite: 'lax', maxAge: 1000 * 60 * 60 * 24 }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(authLocals);
 
 app.get('/favicon.ico', (req, res) => {
   res.redirect(301, '/favicon.svg');
 });
 
-app.get('/', listTable('events'));
+app.post('/auth/login', requireGuest, postLogin);
+app.post('/auth/register', requireGuest, postRegister);
+app.post('/auth/logout', requireAuth, logout);
 
-for (const key of Object.keys(formConfig)) {
-  app.get(`/${key}`, listTable(key));
-  app.get(`/${key}/new`, showForm(key));
-  app.get(`/${key}/:id/edit`, showForm(key));
-  app.post(`/${key}`, saveForm(key));
-  app.post(`/${key}/:id`, saveForm(key));
-  app.post(`/${key}/:id/delete`, deleteRecord(key));
+app.get('/profile', requireAuth, showProfile);
+app.post('/profile', requireAuth, updateProfile);
+app.post('/profile/password', requireAuth, updatePassword);
+
+app.get('/', listTable('events'));
+app.get('/events', listTable('events'));
+app.get('/events/new', staff, showForm('events'));
+app.get('/events/:id/edit', staff, showForm('events'));
+app.post('/events', staff, saveForm('events'));
+app.post('/events/:id', staff, saveForm('events'));
+app.post('/events/:id/delete', staff, deleteRecord('events'));
+
+app.get('/tickets', requireAuth, listTable('tickets'));
+app.get('/tickets/new', staff, showForm('tickets'));
+app.get('/tickets/:id/edit', staff, showForm('tickets'));
+app.post('/tickets', staff, saveForm('tickets'));
+app.post('/tickets/:id', staff, saveForm('tickets'));
+app.post('/tickets/:id/delete', staff, deleteRecord('tickets'));
+
+for (const key of ['locations', 'organizers', 'categories', 'clients']) {
+  app.get(`/${key}`, admin, listTable(key));
+  app.get(`/${key}/new`, admin, showForm(key));
+  app.get(`/${key}/:id/edit`, admin, showForm(key));
+  app.post(`/${key}`, admin, saveForm(key));
+  app.post(`/${key}/:id`, admin, saveForm(key));
+  app.post(`/${key}/:id/delete`, admin, deleteRecord(key));
 }
 
-app.get('/api/:resource/:id/related', relatedInfo());
+app.get('/api/:resource/:id/related', requireAuth, relatedInfo());
 
 app.get('/health', async (req, res) => {
   const repositories = [
@@ -52,7 +89,8 @@ app.get('/health', async (req, res) => {
     ['clients', 'Client'],
     ['events', 'Event'],
     ['ticketCategories', 'TicketCategory'],
-    ['tickets', 'Ticket']
+    ['tickets', 'Ticket'],
+    ['users', 'User']
   ];
   const counts = {};
 
@@ -71,7 +109,7 @@ app.use((req, res) => {
     title: 'Сторінку не знайдено',
     message: 'Такої сторінки не існує.',
     active: null,
-    nav: navigation
+    nav: navigationFor(req.user?.role || ROLES.GUEST)
   });
 });
 
@@ -84,7 +122,7 @@ app.use((error, req, res, next) => {
     title: 'Помилка сервера',
     message: 'Не вдалося обробити запит. Спробуйте пізніше.',
     active: null,
-    nav: navigation
+    nav: navigationFor(req.user?.role || ROLES.GUEST)
   });
 });
 

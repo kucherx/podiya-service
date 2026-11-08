@@ -26,7 +26,7 @@ function rawValue(field, record, values) {
   return record[field.name] ?? '';
 }
 
-async function loadOptions(field, value) {
+async function loadOptions(field, value, user) {
   const selected = field.type === 'multiselect'
     ? (Array.isArray(value) ? value.map(String) : [])
     : [String(value)];
@@ -38,10 +38,14 @@ async function loadOptions(field, value) {
     }));
   }
 
-  const rows = await AppDataSource.getRepository(field.relation.entity).find({
+  let rows = await AppDataSource.getRepository(field.relation.entity).find({
     relations: field.relation.include || {},
     order: field.relation.order
   });
+
+  if (field.relation.owner === 'organizer' && user?.organizer) {
+    rows = rows.filter((row) => row.organizer?.id === user.organizer.id);
+  }
 
   return rows.map((row) => {
     const label = typeof field.relation.label === 'function'
@@ -63,7 +67,7 @@ export async function loadRecord(config, id) {
   });
 }
 
-export async function buildFields(config, record, values, errors) {
+export async function buildFields(config, record, values, errors, user) {
   const fields = [];
 
   for (const field of config.fields) {
@@ -74,7 +78,7 @@ export async function buildFields(config, record, values, errors) {
       display: field.type === 'datetime' ? formatDateDisplay(value) : '',
       inputType: ['email', 'tel', 'url', 'number'].includes(field.type) ? field.type : 'text',
       prompt: field.placeholder || 'Оберіть значення',
-      options: await loadOptions(field, value),
+      options: await loadOptions(field, value, user),
       error: errors?.[field.name] || ''
     });
   }

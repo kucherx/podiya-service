@@ -1,22 +1,36 @@
 import { AppDataSource } from '../db/data-source.js';
 import { formConfig } from '../view/forms/index.js';
-import { navigation } from '../view/navigation.js';
+import { navigationFor } from '../view/navigation.js';
 import { buildFields, loadRecord } from '../service/form-fields.js';
 import { validate } from '../validation/validate.js';
 import { mapDbError } from '../validation/db-errors.js';
 import { nextTicketCode } from '../service/ticket-code.js';
+import { ROLES } from '../auth/roles.js';
+import { canAccessRecord } from '../auth/access.js';
+import { wantsJson } from '../lib/request.js';
 
 function parsedId(value) {
   const id = Number(value);
   return Number.isInteger(id) && id > 0 ? id : null;
 }
 
-function renderForm(res, key, id, fields, errors, status = 200) {
-  const config = formConfig[key];
+function configForUser(config, user) {
+  if (user.role === ROLES.ORGANIZER && config.entity === 'Event') {
+    return {
+      ...config,
+      fields: config.fields.filter((field) => field.name !== 'organizer')
+    };
+  }
+  return config;
+}
+
+function renderForm(req, res, key, id, fields, errors, status = 200) {
+  const full = formConfig[key];
+  const config = configForUser(full, req.user);
   res.status(status).render('form', {
-    title: id ? `Редагувати ${config.singular}` : `Створити ${config.singular}`,
+    title: id ? `Редагувати ${full.singular}` : `Створити ${full.singular}`,
     active: key,
-    nav: navigation,
+    nav: navigationFor(req.user.role),
     config,
     isEdit: Boolean(id),
     fields,
@@ -27,63 +41,93 @@ function renderForm(res, key, id, fields, errors, status = 200) {
   });
 }
 
-function notFound(res, key, message = 'Запис не знайдено.') {
+function notFound(req, res, message = 'Запис не знайдено.') {
   res.status(404).render('error', {
     title: 'Запис не знайдено',
     message,
-    active: key,
-    nav: navigation
+    active: null,
+    nav: navigationFor(req.user.role)
+  });
+}
+
+function forbidden(req, res) {
+  res.status(403).render('error', {
+    title: 'Доступ заборонено',
+    message: 'У вас немає прав для цієї дії.',
+    active: null,
+    nav: navigationFor(req.user.role)
   });
 }
 
 export function showForm(key) {
   return async (req, res) => {
-    const config = formConfig[key];
+    const config = configForUser(formConfig[key], req.user);
     const id = req.params.id ? parsedId(req.params.id) : null;
 
-    if (req.params.id && !id) return notFound(res, key, 'Некоректний ідентифікатор запису.');
+    if (req.params.id && !id) return notFound(req, res, 'Некоректний ідентифікатор запису.');
+    if (id && !(await canAccessRecord(req.user.role, key, id, req.user))) return forbidden(req, res);
 
     const record = id ? await loadRecord(config, id) : null;
-    if (id && !record) return notFound(res, key);
+    if (id && !record) return notFound(req, res);
 
-    const fields = await buildFields(config, record, null, {});
-    renderForm(res, key, id, fields, {});
+    const fields = await buildFields(config, record, null, {}, req.user);
+    renderForm(req, res, key, id, fields, {});
   };
 }
 
 export function saveForm(key) {
   return async (req, res) => {
-    const config = formConfig[key];
+    const full = formConfig[key];
+    const config = configForUser(full, req.user);
     const id = req.params.id ? parsedId(req.params.id) : null;
 
-    if (req.params.id && !id) return notFound(res, key, 'Некоректний ідентифікатор запису.');
+    if (req.params.id && !id) return notFound(req, res, 'Некоректний ідентифікатор запису.');
+    if (id && !(await canAccessRecord(req.user.role, key, id, req.user))) return forbidden(req, res);
 
-    const { errors, data } = await validate(config, req.body, id);
+    if (req.user.role === ROLES.ORGANIZER) {
+      if (!req.user.organizer) return forbidden(req, res);
+      if (key === 'events') req.body.organizer = String(req.user.organizer.id);
+      if (key === 'tickets') {
+        const eventId = Number(req.body.event);
+        const event = await AppDataSource.getRepository('Event').findOne({
+          where: { id: eventId },
+          relations: { organizer: true }
+        });
+        if (!event || event.organizer?.id !== req.user.organizer.id) {
+          const errors = { event: 'Оберіть подію, якою ви керуєте.' };
+          const fields = await buildFields(config, null, req.body, errors, req.user);
+          return renderForm(req, res, key, id, fields, errors, 422);
+        }
+      }
+    }
 
+    const { errors, data } = await validate(full, req.body, id);
     if (Object.keys(errors).length > 0) {
-      const fields = await buildFields(config, null, req.body, errors);
-      return renderForm(res, key, id, fields, errors, 422);
+      const fields = await buildFields(config, null, req.body, errors, req.user);
+      return renderForm(req, res, key, id, fields, errors, 422);
     }
 
     try {
-      const repository = AppDataSource.getRepository(config.entity);
+      const repository = AppDataSource.getRepository(full.entity);
       if (!id && key === 'tickets') {
         data.code = await nextTicketCode(data.event.id, data.category.id);
       }
       if (id) {
         const record = await repository.findOneBy({ id });
-        if (!record) return notFound(res, key);
+        if (!record) return notFound(req, res);
         repository.merge(record, data);
         await repository.save(record);
       } else {
         await repository.save(repository.create(data));
       }
 
-      return res.redirect(`/${key}?notice=${id ? 'updated' : 'created'}`);
+      const redirect = `/${key}?notice=${id ? 'updated' : 'created'}`;
+      if (wantsJson(req)) return res.json({ ok: true, redirect });
+      return res.redirect(redirect);
     } catch (error) {
-      const errors = mapDbError(error, config);
-      const fields = await buildFields(config, null, req.body, errors);
-      return renderForm(res, key, id, fields, errors, 422);
+      const dbErrors = mapDbError(error, full);
+      const fields = await buildFields(config, null, req.body, dbErrors, req.user);
+      return renderForm(req, res, key, id, fields, dbErrors, 422);
     }
   };
 }

@@ -8,6 +8,10 @@ CREATE TABLE "clients" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "fullNa
 
 CREATE INDEX "IDX_396b6ec49a8f3cae7cdc6e866d" ON "clients" ("city");
 
+CREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar(160) NOT NULL, "passwordHash" varchar(255) NOT NULL, "role" varchar(20) NOT NULL DEFAULT ('client'), "createdAt" datetime NOT NULL DEFAULT (datetime('now')), "updatedAt" datetime NOT NULL DEFAULT (datetime('now')), "client_id" integer, "organizer_id" integer, CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email"), CONSTRAINT "FK_0d1e90d75674c54f8660c4ed446" FOREIGN KEY ("client_id") REFERENCES "clients" ("id") ON DELETE CASCADE ON UPDATE NO ACTION, CONSTRAINT "FK_ef810b89dd19a7a7dc5fc687880" FOREIGN KEY ("organizer_id") REFERENCES "organizers" ("id") ON DELETE CASCADE ON UPDATE NO ACTION);
+
+CREATE INDEX "IDX_ace513fa30d485cfd25c11a9e4" ON "users" ("role");
+
 CREATE TABLE "events" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar(200) NOT NULL, "description" text NOT NULL, "startsAt" datetime NOT NULL, "endsAt" datetime NOT NULL, "status" varchar(32) NOT NULL DEFAULT ('draft'), "createdAt" datetime NOT NULL DEFAULT (datetime('now')), "updatedAt" datetime NOT NULL DEFAULT (datetime('now')), "location_id" integer NOT NULL, "organizer_id" integer NOT NULL, CONSTRAINT "FK_fccf31c64ec14a66276e9999730" FOREIGN KEY ("location_id") REFERENCES "locations" ("id") ON DELETE RESTRICT ON UPDATE NO ACTION, CONSTRAINT "FK_14c9ce53a2c2a1c781b8390123e" FOREIGN KEY ("organizer_id") REFERENCES "organizers" ("id") ON DELETE RESTRICT ON UPDATE NO ACTION);
 
 CREATE INDEX "IDX_e0da647c004a695b1d55a073e8" ON "events" ("startsAt");

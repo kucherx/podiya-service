@@ -3,41 +3,45 @@
     <h1>{{title}}</h1>
     <p class="subtitle">Усього записів: {{items.length}}</p>
   </div>
-  <a class="btn btn-primary" href="{{createHref}}">
-    <svg class="btn-icon" viewBox="0 0 20 20" aria-hidden="true">
-      <path d="M10 4v12M4 10h12"></path>
-    </svg>
-    Додати запис
-  </a>
+  {{#if canManage}}
+    <a class="btn btn-primary" href="{{createHref}}">
+      <svg class="btn-icon" viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M10 4v12M4 10h12"></path>
+      </svg>
+      Додати запис
+    </a>
+  {{/if}}
 </section>
 
 <section class="table-card">
   <table>
     <colgroup>
       {{#each widths}}<col style="width: {{this}}">{{/each}}
-      <col class="actions-width">
+      {{#if canManage}}<col class="actions-width">{{/if}}
     </colgroup>
     <thead>
       <tr>
         {{#each columns}}<th>{{this}}</th>{{/each}}
-        <th class="actions-col">Дії</th>
+        {{#if canManage}}<th class="actions-col">Дії</th>{{/if}}
       </tr>
     </thead>
     <tbody>
       {{#each items}}
         <tr>
           {{#each cells}}<td class="{{lookup @root.align @index}}" title="{{this}}">{{this}}</td>{{/each}}
-          <td class="actions-cell">
-            <a class="btn btn-small btn-ghost" href="{{editHref}}">Редагувати</a>
-            <button
-              type="button"
-              class="btn btn-small btn-danger"
-              data-delete
-              data-resource="{{@root.key}}"
-              data-id="{{id}}"
-              data-name="{{name}}"
-            >Видалити</button>
-          </td>
+          {{#if @root.canManage}}
+            <td class="actions-cell">
+              <a class="btn btn-small btn-ghost" href="{{editHref}}">Редагувати</a>
+              <button
+                type="button"
+                class="btn btn-small btn-danger"
+                data-delete
+                data-resource="{{@root.key}}"
+                data-id="{{id}}"
+                data-name="{{name}}"
+              >Видалити</button>
+            </td>
+          {{/if}}
         </tr>
       {{else}}
         <tr><td class="empty-cell" colspan="{{colspan}}">Записів поки немає</td></tr>

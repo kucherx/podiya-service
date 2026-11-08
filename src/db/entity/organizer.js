@@ -18,6 +18,11 @@ export const Organizer = new EntitySchema({
       type: 'one-to-many',
       target: 'Event',
       inverseSide: 'organizer'
+    },
+    users: {
+      type: 'one-to-many',
+      target: 'User',
+      inverseSide: 'organizer'
     }
   },
   uniques: [{ columns: ['city', 'name'] }]

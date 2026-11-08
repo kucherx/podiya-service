@@ -4,6 +4,7 @@ import { Client } from './client.js';
 import { Event } from './event.js';
 import { TicketCategory } from './ticket-category.js';
 import { Ticket } from './ticket.js';
+import { User } from './user.js';
 
 export {
   Location,
@@ -11,7 +12,8 @@ export {
   Client,
   Event,
   TicketCategory,
-  Ticket
+  Ticket,
+  User
 };
 
 export const entities = [
@@ -20,5 +22,6 @@ export const entities = [
   Client,
   Event,
   TicketCategory,
-  Ticket
+  Ticket,
+  User
 ];

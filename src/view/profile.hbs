@@ -1,0 +1,87 @@
+<section class="page-head">
+  <div>
+    <h1>Профіль</h1>
+    <p class="subtitle">{{info.name}} · {{roleLabel}}</p>
+  </div>
+</section>
+
+<section class="profile-summary">
+  <div class="profile-avatar" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><use href="#icon-profile"></use></svg>
+  </div>
+  <div class="profile-summary-main">
+    <h2>{{info.name}}</h2>
+    <span>{{roleLabel}}</span>
+  </div>
+  <dl class="profile-facts">
+    <div><dt>Email</dt><dd>{{info.email}}</dd></div>
+    {{#if info.phone}}<div><dt>Телефон</dt><dd>{{info.phone}}</dd></div>{{/if}}
+    {{#if info.city}}<div><dt>Місто</dt><dd>{{info.city}}</dd></div>{{/if}}
+    {{#if info.website}}<div><dt>Сайт</dt><dd>{{info.website}}</dd></div>{{/if}}
+  </dl>
+</section>
+
+<div class="profile-grid">
+  <section class="profile-card">
+    <h2>Особисті дані</h2>
+    <p class="profile-hint">Оновіть інформацію, яка використовується в системі.</p>
+
+    {{#if profileErrors._form}}
+      <div class="alert alert-error">{{profileErrors._form}}</div>
+    {{/if}}
+
+    <form method="post" action="/profile" novalidate data-ajax>
+      <div class="form-grid">
+        {{#each fields}}
+          <div class="field{{#if wide}} field-wide{{/if}}{{#if error}} field-invalid{{/if}}">
+            <label for="profile-{{name}}">{{label}}</label>
+
+            {{#if (eq type 'textarea')}}
+              <textarea id="profile-{{name}}" name="{{name}}" rows="{{rows}}" placeholder="{{placeholder}}">{{value}}</textarea>
+            {{else}}
+              <input
+                id="profile-{{name}}"
+                type="{{inputType}}"
+                name="{{name}}"
+                value="{{value}}"
+                placeholder="{{placeholder}}"
+                autocomplete="off"
+              >
+            {{/if}}
+
+            {{#if error}}<p class="field-error">{{error}}</p>{{/if}}
+          </div>
+        {{/each}}
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Зберегти зміни</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="profile-card">
+    <h2>Зміна пароля</h2>
+    <p class="profile-hint">Використовуйте пароль довжиною щонайменше 8 символів.</p>
+
+    <form method="post" action="/profile/password" novalidate data-ajax>
+      <div class="field{{#if passwordErrors.currentPassword}} field-invalid{{/if}}">
+        <label for="current-password">Поточний пароль</label>
+        <input id="current-password" type="password" name="currentPassword" autocomplete="current-password">
+        {{#if passwordErrors.currentPassword}}<p class="field-error">{{passwordErrors.currentPassword}}</p>{{/if}}
+      </div>
+      <div class="field{{#if passwordErrors.newPassword}} field-invalid{{/if}}">
+        <label for="new-password">Новий пароль</label>
+        <input id="new-password" type="password" name="newPassword" autocomplete="new-password">
+        {{#if passwordErrors.newPassword}}<p class="field-error">{{passwordErrors.newPassword}}</p>{{/if}}
+      </div>
+      <div class="field{{#if passwordErrors.confirmPassword}} field-invalid{{/if}}">
+        <label for="confirm-password">Повторіть новий пароль</label>
+        <input id="confirm-password" type="password" name="confirmPassword" autocomplete="new-password">
+        {{#if passwordErrors.confirmPassword}}<p class="field-error">{{passwordErrors.confirmPassword}}</p>{{/if}}
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Змінити пароль</button>
+      </div>
+    </form>
+  </section>
+</div>

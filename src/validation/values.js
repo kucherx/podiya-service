@@ -125,5 +125,5 @@ export async function validateValue(field, raw, data, errors) {
     return;
   }
 
-  data[field.name] = text;
+  data[field.name] = field.type === 'email' ? text.toLowerCase() : text;
 }

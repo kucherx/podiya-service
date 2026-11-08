@@ -1,50 +1,50 @@
 export const clients = [
   {
-    fullName: 'Олеся Гриценко',
-    email: 'olesia.hrytsenko@example.com',
-    phone: '+380 67 101 20 30',
+    fullName: 'Мирослава Гаврилюк',
+    email: 'myroslava.havryliuk@gmail.com',
+    phone: '+380 67 214 35 46',
     city: 'Київ'
   },
   {
-    fullName: 'Марко Литвин',
-    email: 'marko.lytvyn@example.com',
-    phone: '+380 63 202 30 40',
+    fullName: 'Артем Литвиненко',
+    email: 'artem.lytvynenko@gmail.com',
+    phone: '+380 63 325 46 57',
     city: 'Львів'
   },
   {
-    fullName: 'Ірина Савчук',
-    email: 'iryna.savchuk@example.com',
-    phone: '+380 50 303 40 50',
-    city: 'Дніпро'
-  },
-  {
-    fullName: 'Богдан Мельник',
-    email: 'bohdan.melnyk@example.com',
-    phone: '+380 96 404 50 60',
+    fullName: 'Дарина Бондаренко',
+    email: 'daryna.bondarenko@gmail.com',
+    phone: '+380 50 436 57 68',
     city: 'Одеса'
   },
   {
-    fullName: 'Софія Кравець',
-    email: 'sofia.kravets@example.com',
-    phone: '+380 67 505 60 70',
+    fullName: 'Олексій Ткаченко',
+    email: 'oleksii.tkachenko@gmail.com',
+    phone: '+380 96 547 68 79',
+    city: 'Дніпро'
+  },
+  {
+    fullName: 'Марія Кравченко',
+    email: 'maria.kravchenko@gmail.com',
+    phone: '+380 67 658 79 80',
     city: 'Харків'
   },
   {
-    fullName: 'Назар Бондар',
-    email: 'nazar.bondar@example.com',
-    phone: '+380 68 606 70 80',
+    fullName: 'Ігор Мельник',
+    email: 'ihor.melnyk@gmail.com',
+    phone: '+380 68 769 80 91',
     city: 'Київ'
   },
   {
-    fullName: 'Аліна Мороз',
-    email: 'alina.moroz@example.com',
-    phone: '+380 95 707 80 90',
+    fullName: 'Юлія Поліщук',
+    email: 'yuliia.polishchuk@gmail.com',
+    phone: '+380 95 870 91 02',
     city: 'Львів'
   },
   {
-    fullName: 'Тарас Гнатюк',
-    email: 'taras.hnatiuk@example.com',
-    phone: '+380 93 808 90 10',
-    city: 'Дніпро'
+    fullName: 'Максим Лисенко',
+    email: 'maksym.lysenko@gmail.com',
+    phone: '+380 93 981 02 13',
+    city: 'Одеса'
   }
 ];

@@ -47,7 +47,7 @@ export const events = [
     status: 'draft',
     location: 0,
     organizer: 0,
-    categories: ['Стандарт', 'Front row', 'Студентський']
+    categories: ['Стандарт', 'Передній ряд', 'Студентський']
   },
   {
     title: 'Форум креативних індустрій',

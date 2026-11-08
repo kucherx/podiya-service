@@ -3,6 +3,45 @@ import { organizers } from './data/organizers.js';
 import { clients } from './data/clients.js';
 import { categories } from './data/categories.js';
 import { events } from './data/events.js';
+import { adminAccount, organizerPassword, clientPassword } from './data/users.js';
+import { hashPassword } from '../../auth/passwords.js';
+
+async function seedUsers(dataSource) {
+  const userRepo = dataSource.getRepository('User');
+  if (await userRepo.count()) return;
+
+  const organizerRows = await dataSource.getRepository('Organizer').find();
+  const clientRows = await dataSource.getRepository('Client').find();
+  const [adminHash, organizerHash, clientHash] = await Promise.all([
+    hashPassword(adminAccount.password),
+    hashPassword(organizerPassword),
+    hashPassword(clientPassword)
+  ]);
+
+  const users = [
+    { email: adminAccount.email, passwordHash: adminHash, role: 'admin' }
+  ];
+  const seen = new Set([adminAccount.email]);
+
+  for (const organizer of organizerRows) {
+    const email = organizer.email.toLowerCase();
+    if (!seen.has(email)) {
+      users.push({ email, passwordHash: organizerHash, role: 'organizer', organizer });
+      seen.add(email);
+    }
+  }
+
+  for (const client of clientRows) {
+    const email = client.email.toLowerCase();
+    if (!seen.has(email)) {
+      users.push({ email, passwordHash: clientHash, role: 'client', client });
+      seen.add(email);
+    }
+  }
+
+  await userRepo.save(users);
+}
+
 
 function ticketCode(eventIndex, categoryIndex, ticketIndex) {
   const eventPart = String(eventIndex + 1).padStart(2, '0');
@@ -13,7 +52,10 @@ function ticketCode(eventIndex, categoryIndex, ticketIndex) {
 
 export async function seed(dataSource) {
   const locationRepo = dataSource.getRepository('Location');
-  if (await locationRepo.count()) return false;
+  if (await locationRepo.count()) {
+    await seedUsers(dataSource);
+    return false;
+  }
 
   const savedLocations = await locationRepo.save(locations);
   const savedOrganizers = await dataSource.getRepository('Organizer').save(organizers);
@@ -62,5 +104,6 @@ export async function seed(dataSource) {
     await ticketRepo.save(tickets);
   }
 
+  await seedUsers(dataSource);
   return true;
 }

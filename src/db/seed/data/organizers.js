@@ -1,42 +1,42 @@
 export const organizers = [
   {
-    name: 'Студія «Тло»',
+    name: 'Київський подієвий двір',
     city: 'Київ',
-    email: 'hello@tlo.ua',
-    phone: '+380 44 123 45 67',
-    website: 'https://tlo.ua',
-    description: 'Незалежна студія подій та візуальних проєктів.'
+    email: 'kyiv.event.yard@gmail.com',
+    phone: '+380 44 217 43 59',
+    website: 'https://kyiv-event-yard.com',
+    description: 'Організація міських концертів, виставок і культурних вечорів.'
   },
   {
-    name: 'Львівська міська рада культури',
+    name: 'Львівська сцена',
     city: 'Львів',
-    email: 'culture@lviv.ua',
-    phone: '+380 32 297 57 00',
-    website: 'https://culture.lviv.ua',
-    description: 'Міські культурні програми та фестивалі.'
+    email: 'lvivska.stsena@gmail.com',
+    phone: '+380 32 245 18 73',
+    website: 'https://lvivska-stsena.com',
+    description: 'Театральні, музичні та літературні події Львова.'
   },
   {
-    name: 'Dnipro Art Cluster',
+    name: 'Дніпро Подія',
     city: 'Дніпро',
-    email: 'team@dniproart.club',
-    phone: '+380 56 789 12 34',
-    website: 'https://dniproart.club',
-    description: 'Об’єднання митців і креативних команд Дніпра.'
+    email: 'dnipro.podiya@gmail.com',
+    phone: '+380 56 731 26 48',
+    website: 'https://dnipro-podiya.com',
+    description: 'Креативні події, виставки та освітні проєкти.'
   },
   {
-    name: 'Odesa Sound Bureau',
+    name: 'Одеський івент-хаб',
     city: 'Одеса',
-    email: 'booking@odesasound.ua',
-    phone: '+380 48 700 11 22',
-    website: 'https://odesasound.ua',
-    description: 'Музичні події, лекції та вечірні формати.'
+    email: 'odesa.event.hub@gmail.com',
+    phone: '+380 48 726 54 19',
+    website: 'https://odesa-event-hub.com',
+    description: 'Музичні вечори, кінопокази та міські фестивалі.'
   },
   {
-    name: 'Kharkiv Music Fest',
+    name: 'Харків Культ',
     city: 'Харків',
-    email: 'info@kharkivmusic.fest',
-    phone: '+380 57 705 33 44',
-    website: 'https://kharkivmusic.fest',
-    description: 'Фестивалі академічної та сучасної музики.'
+    email: 'kharkiv.kult@gmail.com',
+    phone: '+380 57 715 39 62',
+    website: 'https://kharkiv-kult.com',
+    description: 'Сучасна музика, лекції та мистецькі зустрічі.'
   }
 ];

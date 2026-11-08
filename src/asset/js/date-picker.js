@@ -1,5 +1,4 @@
 import { MONTHS, WEEKDAYS, make, parseValue, toValue, displayValue, navButton, createTimeRow } from './date-utils.js';
-
 function initDatePicker(control) {
   const hidden = control.querySelector('input[type="hidden"]');
   const display = control.querySelector('.date-display');
@@ -8,24 +7,19 @@ function initDatePicker(control) {
   const now = new Date();
   let selected = parseValue(hidden.value);
   let view = selected ? { year: selected.year, month: selected.month } : null;
-
   function sync() {
     hidden.value = selected ? toValue(selected) : '';
     display.value = displayValue(selected);
   }
-
   function ensureView() {
     if (!view) view = { year: selected?.year || now.getFullYear(), month: selected?.month || now.getMonth() + 1 };
   }
-
   function close() {
     popover.hidden = true;
   }
-
   function render() {
     ensureView();
     popover.innerHTML = '';
-
     const head = make('div', 'date-head');
     const prev = navButton('prev');
     const next = navButton('next');
@@ -37,14 +31,12 @@ function initDatePicker(control) {
       month.appendChild(option);
     });
     month.value = String(view.month);
-
     const year = make('input', 'date-year');
     year.type = 'number';
     year.min = '1900';
     year.max = '2200';
     year.value = String(view.year);
     year.setAttribute('aria-label', 'Рік');
-
     prev.addEventListener('click', () => {
       view.month -= 1;
       if (view.month === 0) { view.month = 12; view.year -= 1; }
@@ -70,15 +62,12 @@ function initDatePicker(control) {
     });
     year.addEventListener('focus', () => year.select());
     head.append(prev, month, year, next);
-
     const weekdays = make('div', 'date-weekdays');
     WEEKDAYS.forEach((day) => weekdays.appendChild(make('span', '', day)));
-
     const grid = make('div', 'date-grid');
     const offset = (new Date(view.year, view.month - 1, 1).getDay() + 6) % 7;
     const total = new Date(view.year, view.month, 0).getDate();
     for (let i = 0; i < offset; i += 1) grid.appendChild(make('span', 'date-day blank'));
-
     for (let day = 1; day <= total; day += 1) {
       const button = make('button', 'date-day', String(day));
       button.type = 'button';
@@ -93,7 +82,6 @@ function initDatePicker(control) {
       });
       grid.appendChild(button);
     }
-
     const timeRow = createTimeRow(selected?.hour ?? 0, selected?.minute ?? 0, (hour, minute) => {
       selected = {
         year: selected?.year || view.year,
@@ -104,7 +92,6 @@ function initDatePicker(control) {
       };
       sync();
     });
-
     const foot = make('div', 'date-foot');
     const today = make('button', 'date-link', 'Сьогодні');
     const clear = make('button', 'date-link muted', 'Очистити');
@@ -125,16 +112,13 @@ function initDatePicker(control) {
     });
     done.addEventListener('click', close);
     foot.append(today, clear, done);
-
     popover.append(head, weekdays, grid, timeRow, foot);
   }
-
   function open() {
     ensureView();
     render();
     popover.hidden = false;
   }
-
   toggle.addEventListener('click', () => (popover.hidden ? open() : close()));
   display.addEventListener('click', open);
   document.addEventListener('click', (event) => {
@@ -145,5 +129,9 @@ function initDatePicker(control) {
   });
   sync();
 }
-
-document.querySelectorAll('[data-datepicker]').forEach(initDatePicker);
+window.initDatePickers = () => document.querySelectorAll('[data-datepicker]').forEach((control) => {
+  if (control.dataset.ready) return;
+  control.dataset.ready = '1';
+  initDatePicker(control);
+});
+window.initDatePickers();

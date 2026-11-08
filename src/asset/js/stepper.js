@@ -36,4 +36,11 @@ function createStepper(input) {
   down.addEventListener('click', () => change(-1));
 }
 
-document.querySelectorAll('input[type="number"]').forEach(createStepper);
+function initSteppers() {
+  document.querySelectorAll('input[type="number"]').forEach((input) => {
+    if (!input.closest('.number-control')) createStepper(input);
+  });
+}
+
+initSteppers();
+window.initSteppers = initSteppers;

@@ -1,0 +1,54 @@
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.user-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 9px;
+  border-radius: 10px;
+  color: var(--text);
+}
+
+.user-link:hover {
+  background: var(--surface-2);
+}
+
+.user-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.user-meta strong {
+  max-width: 180px;
+  overflow: hidden;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-meta small {
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+@media (max-width: 900px) {
+  .header-inner {
+    flex-wrap: wrap;
+  }
+
+  .nav {
+    order: 3;
+    width: 100%;
+  }
+
+  .header-actions {
+    margin-left: auto;
+  }
+}

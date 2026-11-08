@@ -16,6 +16,11 @@ export const Client = new EntitySchema({
       type: 'one-to-many',
       target: 'Ticket',
       inverseSide: 'client'
+    },
+    users: {
+      type: 'one-to-many',
+      target: 'User',
+      inverseSide: 'client'
     }
   },
   indices: [{ columns: ['city'] }]

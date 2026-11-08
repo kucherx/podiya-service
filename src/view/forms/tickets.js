@@ -12,7 +12,7 @@ export const tickets = {
       type: 'select',
       required: true,
       placeholder: 'Оберіть подію',
-      relation: { entity: 'Event', label: 'title', order: { startsAt: 'ASC' } }
+      relation: { entity: 'Event', label: 'title', order: { startsAt: 'ASC' }, include: { organizer: true }, owner: 'organizer' }
     },
     {
       name: 'category',

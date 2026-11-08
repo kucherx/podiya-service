@@ -6,6 +6,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/css/base.css">
   <link rel="stylesheet" href="/css/nav.css">
+  <link rel="stylesheet" href="/css/header.css">
   <link rel="stylesheet" href="/css/controls.css">
   <link rel="stylesheet" href="/css/table.css">
   <link rel="stylesheet" href="/css/form.css">
@@ -17,6 +18,8 @@
   <link rel="stylesheet" href="/css/calendar.css">
   <link rel="stylesheet" href="/css/calendar-footer.css">
   <link rel="stylesheet" href="/css/modal.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <link rel="stylesheet" href="/css/profile.css">
   <title>{{title}} — Менеджер подій</title>
 </head>
 <body>
@@ -35,20 +38,52 @@
           </a>
         {{/each}}
       </nav>
+      <div class="header-actions">
+        {{#if currentUser}}
+          <a class="user-link" href="/profile">
+            <svg class="nav-icon" aria-hidden="true"><use href="#icon-profile"></use></svg>
+            <span class="user-meta">
+              <strong title="{{currentUser.email}}">{{currentUser.name}}</strong>
+              <small>{{roleLabel}}</small>
+            </span>
+          </a>
+          <form method="post" action="/auth/logout">
+            <button class="btn btn-ghost btn-small" type="submit">
+              <svg class="nav-icon" aria-hidden="true"><use href="#icon-logout"></use></svg>
+              Вийти
+            </button>
+          </form>
+        {{else}}
+          <button class="btn btn-ghost" type="button" data-open-auth="login">
+            <svg class="nav-icon" aria-hidden="true"><use href="#icon-login"></use></svg>
+            Увійти
+          </button>
+          <button class="btn btn-primary" type="button" data-open-auth="register">
+            <svg class="nav-icon" aria-hidden="true"><use href="#icon-register"></use></svg>
+            Реєстрація
+          </button>
+        {{/if}}
+      </div>
     </div>
   </header>
   <main class="page">
-    {{#if message}}
+    {{#if flash}}
+      <div class="alert alert-{{flash.type}}" role="status">{{flash.text}}</div>
+    {{/if}}
+    {{#if message.text}}
       <div class="alert alert-{{message.type}}" role="status">{{message.text}}</div>
     {{/if}}
     {{{body}}}
   </main>
+  {{#unless currentUser}}{{> auth-modals}}{{/unless}}
   {{> delete-modal}}
+  <script src="/js/auth.js" defer></script>
   <script src="/js/select.js" defer></script>
   <script src="/js/multi-select.js" defer></script>
   <script src="/js/phone-hint.js" defer></script>
   <script type="module" src="/js/date-picker.js"></script>
   <script src="/js/stepper.js" defer></script>
   <script src="/js/modal.js" defer></script>
+  <script src="/js/ajax.js" defer></script>
 </body>
 </html>

@@ -14,7 +14,7 @@
   <div class="alert alert-error" role="alert">{{errors._form}}</div>
 {{/if}}
 
-<form class="entity-form" method="post" action="{{action}}" novalidate>
+<form class="entity-form" method="post" action="{{action}}" novalidate data-ajax>
   <section class="form-card">
     <div class="form-grid">
       {{#each fields}}
