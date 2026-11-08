@@ -1,0 +1,19 @@
+<table>
+  <colgroup>
+    {{#each widths}}<col style="width: {{this}}">{{/each}}
+  </colgroup>
+  <thead>
+    <tr>
+      {{#each columns}}<th>{{this}}</th>{{/each}}
+    </tr>
+  </thead>
+  <tbody>
+    {{#each rows}}
+      <tr>
+        {{#each this}}<td class="{{lookup @root.align @index}}" title="{{this}}">{{this}}</td>{{/each}}
+      </tr>
+    {{else}}
+      <tr><td class="center" colspan="{{@root.columns.length}}">—</td></tr>
+    {{/each}}
+  </tbody>
+</table>

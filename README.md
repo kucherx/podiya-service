@@ -10,6 +10,7 @@
 
 - Node.js, ESM
 - Express.js
+- Handlebars.js (`express-handlebars`)
 - TypeORM
 - SQLite (драйвер `sql.js`)
 - dotenv
@@ -47,6 +48,12 @@ npm start
 Після запуску:
 
 - `http://localhost:4200` — HTML-таблиця подій;
+- `http://localhost:4200/events` — події;
+- `http://localhost:4200/locations` — локації;
+- `http://localhost:4200/organizers` — організатори;
+- `http://localhost:4200/categories` — категорії квитків;
+- `http://localhost:4200/tickets` — квитки;
+- `http://localhost:4200/clients` — клієнти;
 - `http://localhost:4200/health` — перевірка підключення та кількість записів.
 
 ## Структура
@@ -57,8 +64,16 @@ src/
   server.js
   asset/
     favicon.svg
+    main.css
+  controller/
+    table.controller.js
   view/
-    main-page.js
+    format.js
+    navigation.js
+    table-config.js
+    table.hbs
+    layouts/
+      main.hbs
   db/
     data-source.js
     entity/

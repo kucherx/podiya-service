@@ -1,11 +1,23 @@
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { engine } from 'express-handlebars';
 import { AppDataSource } from './db/data-source.js';
-import { renderMainPage } from './view/main-page.js';
+import { listTable } from './controller/table.controller.js';
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
+
+app.engine('hbs', engine({
+  extname: '.hbs',
+  defaultLayout: 'main',
+  layoutsDir: path.join(currentDir, 'view', 'layouts'),
+  helpers: {
+    eq: (left, right) => left === right
+  }
+}));
+app.set('view engine', 'hbs');
+app.set('views', path.join(currentDir, 'view'));
 
 app.use(express.static(path.join(currentDir, 'asset')));
 app.use(express.json());
@@ -15,14 +27,13 @@ app.get('/favicon.ico', (req, res) => {
   res.redirect(301, '/favicon.svg');
 });
 
-app.get('/', async (req, res) => {
-  const events = await AppDataSource.getRepository('Event').find({
-    relations: { location: true, organizer: true },
-    order: { startsAt: 'ASC' }
-  });
-
-  res.type('html').send(renderMainPage(events));
-});
+app.get('/', listTable('events'));
+app.get('/events', listTable('events'));
+app.get('/locations', listTable('locations'));
+app.get('/organizers', listTable('organizers'));
+app.get('/categories', listTable('categories'));
+app.get('/tickets', listTable('tickets'));
+app.get('/clients', listTable('clients'));
 
 app.get('/health', async (req, res) => {
   const repositories = [
