@@ -64,7 +64,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(path.join(currentDir, 'asset'), {
-  maxAge: isProduction ? '1h' : 0,
+  maxAge: 0,
   etag: true
 }));
 
