@@ -3,6 +3,21 @@
 Платформа для публікації культурних подій, продажу квитків і контролю відвідування.
 Серверний рендеринг сторінок і REST API працюють на одному Express-застосунку.
 
+## Демо
+
+https://podiya-service.vercel.app
+
+## Демо-акаунти
+
+| Роль | Email | Пароль |
+| --- | --- | --- |
+| Адміністратор | `event.manager.podiya@gmail.com` | `@C/^"JMGn97v"Eb+?1WV` |
+| Організатор | `kyiv.event.yard@gmail.com` | `+B8Hz=P",H<.N!:T~Vp*` |
+| Клієнт | `myroslava.havryliuk@gmail.com` | `pxDM4]$::fhRhU7ww@BM` |
+
+Інші 11 акаунтів зі сіду мають власні згенеровані паролі; повний список лежить
+у `db/seed.sql` і локальному `db/seed-accounts.txt`.
+
 ## Стек
 
 - Node.js 22, ESM
