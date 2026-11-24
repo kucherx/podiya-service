@@ -9,10 +9,9 @@
 
     <section class="auth-card" data-auth-card="login" hidden>
       <div class="auth-head">
-        <span class="auth-kicker">Вхід до акаунта</span>
-        <h2>З поверненням</h2>
+        <h2>Вхід</h2>
       </div>
-      <p>Увійдіть, щоб керувати квитками, подіями та профілем.</p>
+      <p>Увійдіть, щоб купити квиток або відкрити профіль.</p>
 
       {% if authErrors._form %}
         <div class="alert alert-error">{{ authErrors._form }}</div>
@@ -40,10 +39,9 @@
 
     <section class="auth-card" data-auth-card="register" hidden>
       <div class="auth-head">
-        <span class="auth-kicker">Новий клієнт</span>
-        <h2>Створити акаунт</h2>
+        <h2>Реєстрація</h2>
       </div>
-      <p>Реєстрація відкриває купівлю квитків і власний профіль.</p>
+      <p>Створіть акаунт, щоб купувати квитки.</p>
 
       {% if authErrors._form %}
         <div class="alert alert-error">{{ authErrors._form }}</div>

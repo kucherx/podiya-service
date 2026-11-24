@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
+    "build": "node scripts/build-check.mjs",
     "db:reset": "node scripts/reset-db.mjs",
     "db:generate": "node scripts/generate-seed.mjs"
   },
@@ -24,6 +25,8 @@
     "node": "22.x"
   },
   "dependencies": {
+    "@neon/config": "^1.14.6",
+    "@neon/env": "^2.1.9",
     "bcryptjs": "^3.0.3",
     "connect-pg-simple": "^10.0.0",
     "dotenv": "^18.0.9",

@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
-  <title id="title">Podiya — квитки на культурні події</title>
-  <rect width="64" height="64" rx="10" fill="#123c2f"/>
-  <path d="M13 19h38v9a5 5 0 0 0 0 10v9H13V38a5 5 0 0 0 0-10v-9Z" fill="#f2ecdf"/>
-  <path d="M39 19v28" stroke="#123c2f" stroke-width="2" stroke-dasharray="3 3"/>
-  <path d="M20 29h11M20 34h8" stroke="#d99a1f" stroke-width="2.4" stroke-linecap="round"/>
+  <title id="title">Podiya — події та квитки</title>
+  <rect width="64" height="64" rx="10" fill="#12110e"/>
+  <path d="M13 19h38v9a5 5 0 0 0 0 10v9H13V38a5 5 0 0 0 0-10v-9Z" fill="#f4f0e7"/>
+  <path d="M39 19v28" stroke="#12110e" stroke-width="2" stroke-dasharray="3 3"/>
+  <path d="M20 29h11M20 34h8" stroke="#e2482e" stroke-width="2.4" stroke-linecap="round"/>
 </svg>

@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import nunjucks from 'nunjucks';
 import { AppDataSource } from './db/data-source.js';
+import { ensureDb } from './db/bootstrap.js';
 import { formatDate, formatMoney, formatStatus } from './view/format.js';
 import { listTable } from './controller/table.js';
 import { showForm } from './controller/form.js';
@@ -66,6 +67,22 @@ app.use(express.static(path.join(currentDir, 'asset'), {
   maxAge: isProduction ? '1h' : 0,
   etag: true
 }));
+
+// Статика віддається без бази. Решта запитів чекає на PostgreSQL один раз
+// на інстанс: якщо база недоступна, сторінка не падає з 500 на кожен CSS.
+app.use(async (req, res, next) => {
+  try {
+    await ensureDb();
+    return next();
+  } catch (error) {
+    console.error('[db] Не вдалося підключитися:', error.message);
+    if (req.path.startsWith('/api/')) {
+      return res.status(503).json({ message: 'База даних тимчасово недоступна.' });
+    }
+    return res.status(503).send('База даних тимчасово недоступна. Спробуйте пізніше.');
+  }
+});
+
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 

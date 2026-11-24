@@ -7,3 +7,4 @@ node_modules
 shots
 npm-debug.log*
 .DS_Store
+.neon
