@@ -63,7 +63,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(path.join(currentDir, 'asset'), {
-  maxAge: isProduction ? '7d' : 0,
+  maxAge: isProduction ? '1h' : 0,
   etag: true
 }));
 app.use(express.json({ limit: '100kb' }));
