@@ -1,5 +1,5 @@
 import { Like } from 'typeorm';
-import { formatInputDateTime } from '../view/format.js';
+import { formatInputDateTime, parseInputDateTime } from '../view/format.js';
 import { formConfig } from '../view/forms/index.js';
 
 export class ApiError extends Error {
@@ -26,6 +26,12 @@ export function parseId(value) {
 }
 
 function inputDate(value) {
+  // Наївний запис без зони (2027-04-01T18:00) трактуємо як київський час,
+  // а не як час сервера: інакше Vercel (UTC) і локальна машина дають різні дати.
+  if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(value) && !/([zZ]|[+-]\d{2}:\d{2})$/.test(value)) {
+    const parsed = parseInputDateTime(value);
+    return parsed ? formatInputDateTime(parsed) : value;
+  }
   const date = value instanceof Date ? value : new Date(value);
   return Number.isNaN(date.getTime()) ? value : formatInputDateTime(date);
 }

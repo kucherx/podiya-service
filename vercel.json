@@ -2,10 +2,7 @@
   "regions": ["fra1"],
   "functions": {
     "api/index.js": {
-      "includeFiles": [
-        "src/asset/**",
-        "src/view/**"
-      ]
+      "includeFiles": "src/**"
     }
   },
   "rewrites": [
