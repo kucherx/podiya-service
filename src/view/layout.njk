@@ -93,13 +93,6 @@
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <span class="footer-brand">Podiya</span>
-      <span>Демонстраційний проєкт, 2026.</span>
-    </div>
-  </footer>
-
   {% if not currentUser %}{% include "partials/auth-modals.njk" %}{% endif %}
   {% include "partials/delete-modal.njk" %}
   {% if currentRole == 'admin' %}{% include "partials/password-modal.njk" %}{% endif %}

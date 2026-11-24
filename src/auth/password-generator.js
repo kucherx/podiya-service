@@ -1,24 +1,17 @@
-import { randomInt } from 'node:crypto';
+import generator from 'generate-password';
 
-const lower = 'abcdefghijkmnopqrstuvwxyz';
-const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
-const digits = '23456789';
-const symbols = '!@#$%&*';
-
-export function generatePassword(length = 16) {
-  const all = lower + upper + digits + symbols;
-  const chars = [
-    lower[randomInt(lower.length)],
-    upper[randomInt(upper.length)],
-    digits[randomInt(digits.length)],
-    symbols[randomInt(symbols.length)]
-  ];
-
-  while (chars.length < length) chars.push(all[randomInt(all.length)]);
-  for (let index = chars.length - 1; index > 0; index -= 1) {
-    const swap = randomInt(index + 1);
-    [chars[index], chars[swap]] = [chars[swap], chars[index]];
-  }
-
-  return chars.join('');
+/**
+ * Криптографічно стійкий пароль: 20 символів, великі й малі літери,
+ * цифри та символи, без схожих символів (0/O, 1/l).
+ */
+export function generatePassword(length = 20) {
+  return generator.generate({
+    length,
+    numbers: true,
+    symbols: true,
+    uppercase: true,
+    lowercase: true,
+    strict: true,
+    excludeSimilarCharacters: true
+  });
 }

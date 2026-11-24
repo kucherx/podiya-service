@@ -1,4 +1,4 @@
--- Podiya — демонстраційні дані для PostgreSQL (Neon)
+-- Podiya — демонстраційні дані для PostgreSQL
 -- Паролі в цьому файлі наведені у відкритому вигляді.
 -- У базу вони потрапляють уже як bcrypt-хеші завдяки pgcrypto crypt().
 -- Після виконання schema.sql цей файл можна запускати повторно.
@@ -124,24 +124,22 @@ INSERT INTO "tickets" ("code", "status", "price", "quantity", "purchasedAt", "pa
 INSERT INTO "tickets" ("code", "status", "price", "quantity", "purchasedAt", "paidAt", "checkedInAt", "event_id", "category_id", "client_id") VALUES ('POD-06-03-02', 'available', 180, 1, NULL, NULL, NULL, 6, 4, NULL);
 INSERT INTO "tickets" ("code", "status", "price", "quantity", "purchasedAt", "paidAt", "checkedInAt", "event_id", "category_id", "client_id") VALUES ('POD-06-03-03', 'reserved', 180, 1, NULL, NULL, NULL, 6, 4, 8);
 
--- Користувачі. Паролі хешуються pgcrypto (bcrypt, cost 12).
--- admin: event.manager.podiya@gmail.com / Adm!n-Podiya-2026-Kx7Q
--- organizers: Org!n-Podiya-2026-Lm3T
--- clients: Cl!ent-Podiya-2026-Rp9V
-INSERT INTO "users" ("email", "passwordHash", "role") VALUES ('event.manager.podiya@gmail.com', crypt('Adm!n-Podiya-2026-Kx7Q', gen_salt('bf', 12)), 'admin');
-INSERT INTO "users" ("email", "passwordHash", "role", "organizer_id") VALUES ('kyiv.event.yard@gmail.com', crypt('Org!n-Podiya-2026-Lm3T', gen_salt('bf', 12)), 'organizer', 1);
-INSERT INTO "users" ("email", "passwordHash", "role", "organizer_id") VALUES ('lvivska.stsena@gmail.com', crypt('Org!n-Podiya-2026-Lm3T', gen_salt('bf', 12)), 'organizer', 2);
-INSERT INTO "users" ("email", "passwordHash", "role", "organizer_id") VALUES ('dnipro.podiya@gmail.com', crypt('Org!n-Podiya-2026-Lm3T', gen_salt('bf', 12)), 'organizer', 3);
-INSERT INTO "users" ("email", "passwordHash", "role", "organizer_id") VALUES ('odesa.event.hub@gmail.com', crypt('Org!n-Podiya-2026-Lm3T', gen_salt('bf', 12)), 'organizer', 4);
-INSERT INTO "users" ("email", "passwordHash", "role", "organizer_id") VALUES ('kharkiv.kult@gmail.com', crypt('Org!n-Podiya-2026-Lm3T', gen_salt('bf', 12)), 'organizer', 5);
-INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('myroslava.havryliuk@gmail.com', crypt('Cl!ent-Podiya-2026-Rp9V', gen_salt('bf', 12)), 'client', 1);
-INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('artem.lytvynenko@gmail.com', crypt('Cl!ent-Podiya-2026-Rp9V', gen_salt('bf', 12)), 'client', 2);
-INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('daryna.bondarenko@gmail.com', crypt('Cl!ent-Podiya-2026-Rp9V', gen_salt('bf', 12)), 'client', 3);
-INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('oleksii.tkachenko@gmail.com', crypt('Cl!ent-Podiya-2026-Rp9V', gen_salt('bf', 12)), 'client', 4);
-INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('maria.kravchenko@gmail.com', crypt('Cl!ent-Podiya-2026-Rp9V', gen_salt('bf', 12)), 'client', 5);
-INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('ihor.melnyk@gmail.com', crypt('Cl!ent-Podiya-2026-Rp9V', gen_salt('bf', 12)), 'client', 6);
-INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('yuliia.polishchuk@gmail.com', crypt('Cl!ent-Podiya-2026-Rp9V', gen_salt('bf', 12)), 'client', 7);
-INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('maksym.lysenko@gmail.com', crypt('Cl!ent-Podiya-2026-Rp9V', gen_salt('bf', 12)), 'client', 8);
+-- Користувачі. Кожен акаунт має власний 20-символьний пароль.
+-- У базу пароль потрапляє як bcrypt-хеш через pgcrypto crypt().
+INSERT INTO "users" ("email", "passwordHash", "role") VALUES ('event.manager.podiya@gmail.com', crypt('@C/^"JMGn97v"Eb+?1WV', gen_salt('bf', 12)), 'admin');
+INSERT INTO "users" ("email", "passwordHash", "role", "organizer_id") VALUES ('kyiv.event.yard@gmail.com', crypt('+B8Hz=P",H<.N!:T~Vp*', gen_salt('bf', 12)), 'organizer', 1);
+INSERT INTO "users" ("email", "passwordHash", "role", "organizer_id") VALUES ('lvivska.stsena@gmail.com', crypt('ZXS{{vTT@$C/(X>VU3X!', gen_salt('bf', 12)), 'organizer', 2);
+INSERT INTO "users" ("email", "passwordHash", "role", "organizer_id") VALUES ('dnipro.podiya@gmail.com', crypt('Q~5E8)S&mn~BzytntKKd', gen_salt('bf', 12)), 'organizer', 3);
+INSERT INTO "users" ("email", "passwordHash", "role", "organizer_id") VALUES ('odesa.event.hub@gmail.com', crypt('B**chZZpWxHYGF$@6Ax_', gen_salt('bf', 12)), 'organizer', 4);
+INSERT INTO "users" ("email", "passwordHash", "role", "organizer_id") VALUES ('kharkiv.kult@gmail.com', crypt('aEAZ7d{}:4Tz~knKW}[J', gen_salt('bf', 12)), 'organizer', 5);
+INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('myroslava.havryliuk@gmail.com', crypt('pxDM4]$::fhRhU7ww@BM', gen_salt('bf', 12)), 'client', 1);
+INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('artem.lytvynenko@gmail.com', crypt('):Z;wrRDn6*!Cz%DDK#k', gen_salt('bf', 12)), 'client', 2);
+INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('daryna.bondarenko@gmail.com', crypt('TKU#($m3gP5!.JMeMn<[', gen_salt('bf', 12)), 'client', 3);
+INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('oleksii.tkachenko@gmail.com', crypt('NR7n+#b?WBuK5V]$r>/p', gen_salt('bf', 12)), 'client', 4);
+INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('maria.kravchenko@gmail.com', crypt('gkG*Afv1p847bymD@rwU', gen_salt('bf', 12)), 'client', 5);
+INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('ihor.melnyk@gmail.com', crypt('Xnxr*Hh=h<JeA7G??c7X', gen_salt('bf', 12)), 'client', 6);
+INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('yuliia.polishchuk@gmail.com', crypt('77V!:7"uUyv)<tzc@)#U', gen_salt('bf', 12)), 'client', 7);
+INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES ('maksym.lysenko@gmail.com', crypt('>%d&/r.fhNGbHD8PuJXk', gen_salt('bf', 12)), 'client', 8);
 
 -- Послідовності після явних id
 SELECT setval(pg_get_serial_sequence('"locations"', 'id'), COALESCE((SELECT MAX("id") FROM "locations"), 1), true);

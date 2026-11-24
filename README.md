@@ -3,20 +3,13 @@
 Платформа для публікації культурних подій, продажу квитків і контролю відвідування.
 Серверний рендеринг сторінок і REST API працюють на одному Express-застосунку.
 
-## Демо
-
-**https://podiya-service.vercel.app**
-
-Сайт працює на Vercel у регіоні `fra1`, база даних — PostgreSQL у Neon
-(`eu-central-1`). Нижче наведені демо-акаунти для всіх ролей.
-
 ## Стек
 
 - Node.js 22, ESM
 - Express 5, `express-session`
 - Passport (`passport-local`), `bcryptjs`
 - Nunjucks
-- TypeORM, PostgreSQL (Neon)
+- TypeORM, PostgreSQL
 - `connect-pg-simple` для сесій у PostgreSQL
 - `dotenv`
 
@@ -33,24 +26,12 @@ SQLite, `sql.js` і Handlebars у проєкті більше не викори�
 Доступ перевіряється на сервері. Клієнтські сторінки отримують дані через REST API,
 а не через прямі запити до бази.
 
-## Демо-акаунти
-
-Паролі в `db/seed.sql` наведені відкрито, а в базу потрапляють уже як bcrypt-хеші
-(`crypt(..., gen_salt('bf', 12))` через розширення `pgcrypto`).
-
-| Роль | Email | Пароль |
-| --- | --- | --- |
-| Адміністратор | `event.manager.podiya@gmail.com` | `Adm!n-Podiya-2026-Kx7Q` |
-| Організатор | `kyiv.event.yard@gmail.com` | `Org!n-Podiya-2026-Lm3T` |
-| Клієнт | `myroslava.havryliuk@gmail.com` | `Cl!ent-Podiya-2026-Rp9V` |
-
-Решта організаторів і клієнтів зі сіду використовує той самий пароль для своєї ролі.
-
 ## Паролі
 
 - Нові паролі створюються у формі, перевіряються на довжину (12+), літеру й цифру.
 - Застосунок хешує їх `bcryptjs` з cost 12 перед записом у базу.
-- Кнопка скидання пароля генерує 16-символьний пароль через `crypto.randomInt`.
+- Скидання пароля генерує 20-символьний пароль бібліотекою `generate-password`
+  (криптографічно стійкий генератор, великі й малі літери, цифри та символи).
 - Сід використовує `pgcrypto`, тому в SQL-файлі пароль читається, а в базі лежить хеш.
 
 ## REST API
@@ -97,7 +78,7 @@ SQLite, `sql.js` і Handlebars у проєкті більше не викори�
 Перестворення бази:
 
 ```bash
-npm run db:reset              # Neon з DATABASE_URL
+npm run db:reset              # PostgreSQL з DATABASE_URL
 npm run db:reset -- --local   # локальна PostgreSQL з DB_*
 npm run db:reset -- --yes     # без підтвердження
 ```
@@ -119,26 +100,13 @@ npm start
 Сайт: `http://localhost:4200`.
 
 Для локальної PostgreSQL додайте у `.env` змінні `DB_HOST`, `DB_PORT`, `DB_USER`,
-`DB_PASSWORD`, `DB_NAME` і запускайте скидання з `--local`. Для Neon достатньо
-`DATABASE_URL` і `DB_SSL=true`.
-
-## Розгортання на Vercel
-
-`api/index.js` експортує Express-застосунок як serverless-функцію, `vercel.json`
-спрямовує всі запити на неї. У Vercel потрібно задати:
-
-- `DATABASE_URL` — рядок підключення Neon (pooled);
-- `SESSION_SECRET` — довгий випадковий рядок;
-- `DB_SSL=true`.
-
-Проєкт Neon підключено через `neon.ts` (`neon deploy`), branch `production`
-(`lively-cake-92348158`). Після першого деплою виконайте `npm run db:reset`
-локально з production `DATABASE_URL`, щоб створити схему й демонстраційні дані.
+`DB_PASSWORD`, `DB_NAME` і запускайте скидання з `--local`. Для хмарної PostgreSQL
+достатньо `DATABASE_URL` і `DB_SSL=true`.
 
 ## Структура
 
 ```text
-api/index.js            Vercel-адаптер
+api/index.js            serverless-адаптер
 db/schema.sql           схема PostgreSQL
 db/seed.sql             демо-дані та bcrypt-хеші через pgcrypto
 scripts/reset-db.mjs    скидання бази

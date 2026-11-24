@@ -6,11 +6,8 @@ import { organizers } from '../src/db/seed/data/organizers.js';
 import { clients } from '../src/db/seed/data/clients.js';
 import { categories } from '../src/db/seed/data/categories.js';
 import { events } from '../src/db/seed/data/events.js';
-import {
-  adminAccount,
-  organizerPassword,
-  clientPassword
-} from '../src/db/seed/data/users.js';
+import { adminAccount } from '../src/db/seed/data/users.js';
+import { generatePassword } from '../src/auth/password-generator.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outFile = path.join(root, 'db', 'seed.sql');
@@ -24,7 +21,7 @@ const n = (value) => Number(value);
 const lines = [];
 const push = (line = '') => lines.push(line);
 
-push('-- Podiya — демонстраційні дані для PostgreSQL (Neon)');
+push('-- Podiya — демонстраційні дані для PostgreSQL');
 push('-- Паролі в цьому файлі наведені у відкритому вигляді.');
 push('-- У базу вони потрапляють уже як bcrypt-хеші завдяки pgcrypto crypt().');
 push('-- Після виконання schema.sql цей файл можна запускати повторно.');
@@ -91,16 +88,24 @@ events.forEach((item, eventIndex) => {
 });
 push('');
 
-push('-- Користувачі. Паролі хешуються pgcrypto (bcrypt, cost 12).');
-push(`-- admin: ${adminAccount.email} / ${adminAccount.password}`);
-push(`-- organizers: ${organizerPassword}`);
-push(`-- clients: ${clientPassword}`);
-push(`INSERT INTO "users" ("email", "passwordHash", "role") VALUES (${q(adminAccount.email)}, crypt(${q(adminAccount.password)}, gen_salt('bf', 12)), 'admin');`);
+push('-- Користувачі. Кожен акаунт має власний 20-символьний пароль.');
+push('-- У базу пароль потрапляє як bcrypt-хеш через pgcrypto crypt().');
+const accounts = [];
+
+const adminPassword = generatePassword(20);
+accounts.push({ role: 'admin', email: adminAccount.email, password: adminPassword });
+push(`INSERT INTO "users" ("email", "passwordHash", "role") VALUES (${q(adminAccount.email)}, crypt(${q(adminPassword)}, gen_salt('bf', 12)), 'admin');`);
+
 organizers.forEach((item, index) => {
-  push(`INSERT INTO "users" ("email", "passwordHash", "role", "organizer_id") VALUES (${q(item.email.toLowerCase())}, crypt(${q(organizerPassword)}, gen_salt('bf', 12)), 'organizer', ${index + 1});`);
+  const password = generatePassword(20);
+  accounts.push({ role: 'organizer', email: item.email.toLowerCase(), password });
+  push(`INSERT INTO "users" ("email", "passwordHash", "role", "organizer_id") VALUES (${q(item.email.toLowerCase())}, crypt(${q(password)}, gen_salt('bf', 12)), 'organizer', ${index + 1});`);
 });
+
 clients.forEach((item, index) => {
-  push(`INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES (${q(item.email.toLowerCase())}, crypt(${q(clientPassword)}, gen_salt('bf', 12)), 'client', ${index + 1});`);
+  const password = generatePassword(20);
+  accounts.push({ role: 'client', email: item.email.toLowerCase(), password });
+  push(`INSERT INTO "users" ("email", "passwordHash", "role", "client_id") VALUES (${q(item.email.toLowerCase())}, crypt(${q(password)}, gen_salt('bf', 12)), 'client', ${index + 1});`);
 });
 push('');
 
@@ -112,4 +117,13 @@ push('');
 
 mkdirSync(path.dirname(outFile), { recursive: true });
 writeFileSync(outFile, lines.join('\n'), 'utf8');
+
+const accountsFile = path.join(root, 'db', 'seed-accounts.txt');
+const accountLines = [
+  'Podiya — згенеровані паролі (не комітити)',
+  '',
+  ...accounts.map((item) => `${item.role.padEnd(9)} ${item.email}  ${item.password}`)
+];
+writeFileSync(accountsFile, accountLines.join('\n'), 'utf8');
 console.log(`Записано ${outFile}: ${lines.length} рядків`);
+console.log(`Акаунти: ${accountsFile} (${accounts.length})`);

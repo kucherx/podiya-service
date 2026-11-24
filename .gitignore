@@ -8,3 +8,5 @@ shots
 npm-debug.log*
 .DS_Store
 .neon
+
+db/seed-accounts.txt

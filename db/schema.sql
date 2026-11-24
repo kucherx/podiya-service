@@ -1,4 +1,4 @@
--- Podiya — схема PostgreSQL (Neon)
+-- Podiya — схема PostgreSQL
 -- Виконується перед seed.sql. Скрипт скидає попередні таблиці.
 
 DROP TABLE IF EXISTS "user_sessions" CASCADE;

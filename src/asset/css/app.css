@@ -858,35 +858,6 @@ h3 {
   border-radius: 0;
 }
 
-/* Підвал */
-.site-footer {
-  border-top: 1px solid var(--ink);
-  background: var(--paper);
-}
-
-.footer-inner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px 28px;
-  width: 100%;
-  max-width: 1320px;
-  margin: 0 auto;
-  padding: 22px 32px;
-  color: var(--muted);
-  font-size: 12px;
-  letter-spacing: 0;
-}
-
-.footer-brand {
-  color: var(--ink);
-  font-family: var(--serif);
-  font-size: 18px;
-  letter-spacing: 0.04em;
-  text-transform: none;
-}
-
 /* Адаптивність */
 @media (max-width: 900px) {
   .masthead {
@@ -966,10 +937,6 @@ h3 {
 
   .form-actions .btn {
     width: 100%;
-  }
-
-  .footer-inner {
-    padding: 18px 20px;
   }
 }
 

@@ -88,7 +88,7 @@ export async function saveUserRecord({ id, values, organizer, client }) {
 export async function resetUserPassword(id) {
   const user = await repository().findOne({ where: { id }, relations: { client: true, organizer: true } });
   if (!user) return null;
-  const password = generatePassword(16);
+  const password = generatePassword(20);
   user.passwordHash = await hashPassword(password);
   await repository().save(user);
   return { user, password };
