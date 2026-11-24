@@ -1,7 +1,11 @@
+{% extends "layout.njk" %}
+
+{% block content %}
 <section class="page-head" data-profile-page>
   <div>
+    <p class="kicker">Акаунт</p>
     <h1>Профіль</h1>
-    <p class="subtitle"><span data-profile-name></span> · {{roleLabel}}</p>
+    <p class="subtitle"><span data-profile-name></span> · {{ roleLabel }}</p>
   </div>
 </section>
 
@@ -11,7 +15,7 @@
   </div>
   <div class="profile-summary-main">
     <h2 data-profile-name></h2>
-    <span>{{roleLabel}}</span>
+    <span>{{ roleLabel }}</span>
   </div>
   <dl class="profile-facts">
     <div><dt>Email</dt><dd data-profile-email></dd></div>
@@ -24,34 +28,27 @@
 <div class="profile-grid">
   <section class="profile-card">
     <h2>Особисті дані</h2>
-    <p class="profile-hint">Оновіть інформацію, яка використовується в системі.</p>
+    <p class="profile-hint">Ці дані використовуються в квитках і службових записах.</p>
 
-    {{#if profileErrors._form}}
-      <div class="alert alert-error">{{profileErrors._form}}</div>
-    {{/if}}
+    {% if profileErrors._form %}
+      <div class="alert alert-error">{{ profileErrors._form }}</div>
+    {% endif %}
 
     <form method="post" action="/profile" novalidate data-ajax data-api data-api-action="/api/profile" data-method="PATCH" data-redirect="/profile" data-profile-form>
       <div class="form-grid">
-        {{#each fields}}
-          <div class="field{{#if wide}} field-wide{{/if}}{{#if error}} field-invalid{{/if}}">
-            <label for="profile-{{name}}">{{label}}</label>
+        {% for field in fields %}
+          <div class="field{% if field.wide %} field-wide{% endif %}{% if field.error %} field-invalid{% endif %}">
+            <label for="profile-{{ field.name }}">{{ field.label }}</label>
 
-            {{#if (eq type 'textarea')}}
-              <textarea id="profile-{{name}}" name="{{name}}" rows="{{rows}}" placeholder="{{placeholder}}">{{value}}</textarea>
-            {{else}}
-              <input
-                id="profile-{{name}}"
-                type="{{inputType}}"
-                name="{{name}}"
-                value="{{value}}"
-                placeholder="{{placeholder}}"
-                autocomplete="off"
-              >
-            {{/if}}
+            {% if field.type == 'textarea' %}
+              <textarea id="profile-{{ field.name }}" name="{{ field.name }}" rows="{{ field.rows or 4 }}" placeholder="{{ field.placeholder }}">{{ field.value }}</textarea>
+            {% else %}
+              <input id="profile-{{ field.name }}" type="{{ field.inputType }}" name="{{ field.name }}" value="{{ field.value }}" placeholder="{{ field.placeholder }}" autocomplete="off">
+            {% endif %}
 
-            {{#if error}}<p class="field-error">{{error}}</p>{{/if}}
+            {% if field.error %}<p class="field-error">{{ field.error }}</p>{% endif %}
           </div>
-        {{/each}}
+        {% endfor %}
       </div>
       <div class="form-actions">
         <button class="btn btn-primary" type="submit">Зберегти зміни</button>
@@ -61,23 +58,23 @@
 
   <section class="profile-card">
     <h2>Зміна пароля</h2>
-    <p class="profile-hint">Використовуйте пароль довжиною щонайменше 8 символів.</p>
+    <p class="profile-hint">Щонайменше 12 символів, літери й цифри.</p>
 
     <form method="post" action="/profile" novalidate data-ajax data-api data-api-action="/api/profile/password" data-redirect="/profile">
-      <div class="field{{#if passwordErrors.currentPassword}} field-invalid{{/if}}">
+      <div class="field{% if passwordErrors.currentPassword %} field-invalid{% endif %}">
         <label for="current-password">Поточний пароль</label>
         <input id="current-password" type="password" name="currentPassword" autocomplete="current-password">
-        {{#if passwordErrors.currentPassword}}<p class="field-error">{{passwordErrors.currentPassword}}</p>{{/if}}
+        {% if passwordErrors.currentPassword %}<p class="field-error">{{ passwordErrors.currentPassword }}</p>{% endif %}
       </div>
-      <div class="field{{#if passwordErrors.newPassword}} field-invalid{{/if}}">
+      <div class="field{% if passwordErrors.newPassword %} field-invalid{% endif %}">
         <label for="new-password">Новий пароль</label>
         <input id="new-password" type="password" name="newPassword" autocomplete="new-password">
-        {{#if passwordErrors.newPassword}}<p class="field-error">{{passwordErrors.newPassword}}</p>{{/if}}
+        {% if passwordErrors.newPassword %}<p class="field-error">{{ passwordErrors.newPassword }}</p>{% endif %}
       </div>
-      <div class="field{{#if passwordErrors.confirmPassword}} field-invalid{{/if}}">
+      <div class="field{% if passwordErrors.confirmPassword %} field-invalid{% endif %}">
         <label for="confirm-password">Повторіть новий пароль</label>
         <input id="confirm-password" type="password" name="confirmPassword" autocomplete="new-password">
-        {{#if passwordErrors.confirmPassword}}<p class="field-error">{{passwordErrors.confirmPassword}}</p>{{/if}}
+        {% if passwordErrors.confirmPassword %}<p class="field-error">{{ passwordErrors.confirmPassword }}</p>{% endif %}
       </div>
       <div class="form-actions">
         <button class="btn btn-primary" type="submit">Змінити пароль</button>
@@ -85,3 +82,4 @@
     </form>
   </section>
 </div>
+{% endblock %}

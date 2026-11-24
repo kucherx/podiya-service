@@ -34,7 +34,7 @@ export function requireAuth(req, res, next) {
   req.session.returnTo = req.originalUrl;
   req.session.authModal = 'login';
   req.session.authErrors = { _form: 'Увійдіть, щоб продовжити.' };
-  res.redirect('/');
+  return res.redirect(303, '/');
 }
 
 export function requireRole(...roles) {

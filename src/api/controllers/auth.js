@@ -1,7 +1,7 @@
 import { AppDataSource } from '../../db/data-source.js';
 import { formConfig } from '../../view/forms/index.js';
 import { validate } from '../../validation/validate.js';
-import { comparePassword, hashPassword } from '../../auth/passwords.js';
+import { comparePassword, hashPassword, passwordProblem } from '../../auth/passwords.js';
 import { publicInfo } from '../../auth/user-view.js';
 import { ROLES } from '../../auth/roles.js';
 import { jsonError } from '../helpers.js';
@@ -49,7 +49,10 @@ export async function register(req, res) {
   const { errors, data } = await validate(formConfig.clients, values, null);
 
   if (!password) errors.password = 'Введіть пароль.';
-  else if (password.length < 8) errors.password = 'Пароль має містити щонайменше 8 символів.';
+  else {
+    const problem = passwordProblem(password);
+    if (problem) errors.password = problem;
+  }
   if (password !== confirm) errors.passwordConfirm = 'Паролі не збігаються.';
 
   if (!errors.email && await AppDataSource.getRepository('User').count({ where: { email: values.email } })) {

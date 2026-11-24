@@ -1,0 +1,92 @@
+<div class="auth-modal" id="auth-modal" data-auto="{{ authModal }}" hidden>
+  <div class="modal-backdrop" data-close-auth></div>
+  <div class="auth-dialog">
+    <button type="button" class="auth-close" data-close-auth aria-label="Закрити">
+      <svg viewBox="0 0 20 20" aria-hidden="true">
+        <path d="m5 5 10 10M15 5 5 15"></path>
+      </svg>
+    </button>
+
+    <section class="auth-card" data-auth-card="login" hidden>
+      <div class="auth-head">
+        <span class="auth-kicker">Вхід до акаунта</span>
+        <h2>З поверненням</h2>
+      </div>
+      <p>Увійдіть, щоб керувати квитками, подіями та профілем.</p>
+
+      {% if authErrors._form %}
+        <div class="alert alert-error">{{ authErrors._form }}</div>
+      {% endif %}
+
+      <form method="post" action="/" novalidate data-ajax data-api data-api-action="/api/auth/login">
+        <div class="field">
+          <label for="login-email">Email</label>
+          <input id="login-email" type="email" name="email" value="{{ authValues.email }}" placeholder="you@example.com" autocomplete="email">
+          {% if authErrors.email %}<p class="field-error">{{ authErrors.email }}</p>{% endif %}
+        </div>
+        <div class="field">
+          <label for="login-password">Пароль</label>
+          <input id="login-password" type="password" name="password" placeholder="Ваш пароль" autocomplete="current-password">
+          {% if authErrors.password %}<p class="field-error">{{ authErrors.password }}</p>{% endif %}
+        </div>
+        <button class="btn btn-primary auth-submit" type="submit">Увійти</button>
+      </form>
+
+      <p class="auth-switch">
+        Немає акаунта?
+        <button type="button" data-open-auth="register">Зареєструватися</button>
+      </p>
+    </section>
+
+    <section class="auth-card" data-auth-card="register" hidden>
+      <div class="auth-head">
+        <span class="auth-kicker">Новий клієнт</span>
+        <h2>Створити акаунт</h2>
+      </div>
+      <p>Реєстрація відкриває купівлю квитків і власний профіль.</p>
+
+      {% if authErrors._form %}
+        <div class="alert alert-error">{{ authErrors._form }}</div>
+      {% endif %}
+
+      <form method="post" action="/" novalidate data-ajax data-api data-api-action="/api/auth/register">
+        <div class="field">
+          <label for="register-name">ПІБ</label>
+          <input id="register-name" type="text" name="fullName" value="{{ authValues.fullName }}" placeholder="Прізвище Ім'я По батькові" autocomplete="name">
+          {% if authErrors.fullName %}<p class="field-error">{{ authErrors.fullName }}</p>{% endif %}
+        </div>
+        <div class="field">
+          <label for="register-email">Email</label>
+          <input id="register-email" type="email" name="email" value="{{ authValues.email }}" placeholder="you@example.com" autocomplete="email">
+          {% if authErrors.email %}<p class="field-error">{{ authErrors.email }}</p>{% endif %}
+        </div>
+        <div class="field">
+          <label for="register-phone">Телефон</label>
+          <input id="register-phone" type="tel" name="phone" value="{{ authValues.phone }}" placeholder="+380 67 123 45 67" autocomplete="tel">
+          {% if authErrors.phone %}<p class="field-error">{{ authErrors.phone }}</p>{% endif %}
+        </div>
+        <div class="field">
+          <label for="register-city">Місто</label>
+          <input id="register-city" type="text" name="city" value="{{ authValues.city }}" placeholder="Київ" autocomplete="address-level2">
+          {% if authErrors.city %}<p class="field-error">{{ authErrors.city }}</p>{% endif %}
+        </div>
+        <div class="field">
+          <label for="register-password">Пароль</label>
+          <input id="register-password" type="password" name="password" placeholder="12+ символів, літери й цифри" autocomplete="new-password">
+          {% if authErrors.password %}<p class="field-error">{{ authErrors.password }}</p>{% endif %}
+        </div>
+        <div class="field">
+          <label for="register-confirm">Повторіть пароль</label>
+          <input id="register-confirm" type="password" name="passwordConfirm" placeholder="Повторіть пароль" autocomplete="new-password">
+          {% if authErrors.passwordConfirm %}<p class="field-error">{{ authErrors.passwordConfirm }}</p>{% endif %}
+        </div>
+        <button class="btn btn-primary auth-submit" type="submit">Створити акаунт</button>
+      </form>
+
+      <p class="auth-switch">
+        Уже маєте акаунт?
+        <button type="button" data-open-auth="login">Увійти</button>
+      </p>
+    </section>
+  </div>
+</div>

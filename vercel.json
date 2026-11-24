@@ -1,0 +1,16 @@
+{
+  "functions": {
+    "api/index.js": {
+      "includeFiles": [
+        "src/asset/**",
+        "src/view/**"
+      ]
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/index.js"
+    }
+  ]
+}

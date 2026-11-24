@@ -7,8 +7,8 @@ export const Event = new EntitySchema({
     id: { type: Number, primary: true, generated: true },
     title: { type: String, length: 200 },
     description: { type: 'text' },
-    startsAt: { type: 'datetime' },
-    endsAt: { type: 'datetime' },
+    startsAt: { type: 'timestamptz' },
+    endsAt: { type: 'timestamptz' },
     status: { type: String, length: 32, default: 'draft' },
     createdAt: { type: Date, createDate: true },
     updatedAt: { type: Date, updateDate: true }

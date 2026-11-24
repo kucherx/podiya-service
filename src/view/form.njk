@@ -1,0 +1,89 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<nav class="crumbs">
+  <a href="{{ cancelHref }}">{{ config.title }}</a>
+  <span class="crumb-sep">/</span>
+  <span>{{ title }}</span>
+</nav>
+
+<section class="page-head page-head-centered">
+  <div>
+    <p class="kicker">Запис у реєстрі</p>
+    <h1>{{ title }}</h1>
+  </div>
+</section>
+
+{% if errors._form %}
+  <div class="alert alert-error" role="alert">{{ errors._form }}</div>
+{% endif %}
+
+<form class="entity-form" method="post" action="{{ redirect }}" novalidate data-ajax data-api data-api-action="{{ apiAction }}" data-method="{{ 'PUT' if isEdit else 'POST' }}" data-redirect="{{ redirect }}" data-form-page data-form-resource="{{ resource }}" data-form-id="{{ recordId }}">
+  <section class="form-card">
+    <div class="form-grid">
+      {% for field in fields %}
+        <div class="field{% if field.wide %} field-wide{% endif %}{% if field.error %} field-invalid{% endif %}">
+          <label for="field-{{ field.name }}">
+            {{ field.label }}
+            {% if field.required %}<span class="req">*</span>{% endif %}
+          </label>
+
+          {% if field.type == 'multiselect' %}
+            <div class="multi-select" data-multiselect data-multiselect-name="{{ field.name }}">
+              <input type="search" class="multi-search" placeholder="Пошук категорій..." aria-label="Пошук у списку категорій">
+              <div class="multi-options">
+                {% for option in field.options %}
+                  <label class="multi-option">
+                    <input type="checkbox" name="{{ field.name }}" value="{{ option.value }}"{% if option.selected %} checked{% endif %}>
+                    <span>{{ option.label }}</span>
+                  </label>
+                {% endfor %}
+                <p class="multi-empty" hidden>Нічого не знайдено</p>
+              </div>
+              <p class="multi-count">Обрано: <span class="multi-count-value">0</span></p>
+            </div>
+          {% elif field.type == 'textarea' %}
+            <textarea id="field-{{ field.name }}" name="{{ field.name }}" rows="{{ field.rows or 4 }}" placeholder="{{ field.placeholder }}">{{ field.value }}</textarea>
+          {% elif field.type == 'select' %}
+            <select id="field-{{ field.name }}" name="{{ field.name }}" data-custom-select data-placeholder="{{ field.prompt }}" data-depends-on="{{ field.dependsOn }}">
+              <option value="">{{ field.prompt }}</option>
+              {% for option in field.options %}
+                <option value="{{ option.value }}"{% if option.dataEvents %} data-events="{{ option.dataEvents }}"{% endif %}{% if option.selected %} selected{% endif %}>{{ option.label }}</option>
+              {% endfor %}
+            </select>
+          {% elif field.type == 'datetime' %}
+            <div class="date-control" data-datepicker>
+              <input type="hidden" name="{{ field.name }}" value="{{ field.value }}">
+              <input type="text" class="date-display" id="field-{{ field.name }}" value="{{ field.display }}" placeholder="Оберіть дату й час" readonly>
+              <button type="button" class="date-toggle" aria-label="Відкрити календар">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <rect x="3" y="4.5" width="14" height="12" rx="2"></rect>
+                  <path d="M3 8h14M7 2.5v4M13 2.5v4"></path>
+                </svg>
+              </button>
+              <div class="date-popover" hidden></div>
+            </div>
+          {% else %}
+            <input
+              id="field-{{ field.name }}"
+              type="{{ field.inputType }}"
+              name="{{ field.name }}"
+              value="{{ field.value }}"
+              placeholder="{{ field.placeholder }}"
+              {% if field.step %}step="{{ field.step }}"{% endif %}
+              autocomplete="off"
+            >
+          {% endif %}
+
+          {% if field.error %}<p class="field-error">{{ field.error }}</p>{% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="form-actions">
+      <a class="btn btn-ghost" href="{{ cancelHref }}">Скасувати</a>
+      <button class="btn btn-primary" type="submit">{{ submitLabel }}</button>
+    </div>
+  </section>
+</form>
+{% endblock %}

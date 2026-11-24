@@ -1,0 +1,13 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<section
+  class="event-page"
+  data-event-page
+  data-id="{{ eventId }}"
+  data-role="{{ role }}"
+  data-authenticated="{{ '1' if authenticated else '0' }}"
+>
+  <p class="subtitle">Завантаження події...</p>
+</section>
+{% endblock %}

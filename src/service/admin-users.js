@@ -1,7 +1,7 @@
 import { Not } from 'typeorm';
 import { AppDataSource } from '../db/data-source.js';
 import { ROLES, ROLE_LABELS } from '../auth/roles.js';
-import { hashPassword } from '../auth/passwords.js';
+import { hashPassword, passwordProblem } from '../auth/passwords.js';
 import { generatePassword } from '../auth/password-generator.js';
 
 export const roleOptions = [
@@ -36,8 +36,9 @@ export async function validateUserPayload({ values, id, currentUserId }) {
   if (id === currentUserId && values.role !== ROLES.ADMIN) {
     errors.role = 'Не можна змінити роль власного акаунта.';
   }
-  if (!id && values.password.length < 8) {
-    errors.password = 'Пароль має містити щонайменше 8 символів.';
+  if (!id) {
+    const problem = passwordProblem(values.password);
+    if (problem) errors.password = problem;
   }
 
   if (!errors.email && await repository().count({
@@ -87,7 +88,7 @@ export async function saveUserRecord({ id, values, organizer, client }) {
 export async function resetUserPassword(id) {
   const user = await repository().findOne({ where: { id }, relations: { client: true, organizer: true } });
   if (!user) return null;
-  const password = generatePassword(14);
+  const password = generatePassword(16);
   user.passwordHash = await hashPassword(password);
   await repository().save(user);
   return { user, password };

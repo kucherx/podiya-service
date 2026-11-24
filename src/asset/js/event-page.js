@@ -41,7 +41,7 @@
 
       const highlight = new URLSearchParams(location.search).get('ticket');
       root.innerHTML = window.eventView.render(event, tickets, role, highlight);
-      document.title = `${event.title} — Менеджер подій`;
+      document.title = `${event.title} — Podiya`;
       window.initSteppers?.();
       root.querySelector('.ticket-highlight')?.scrollIntoView({ block: 'center', behavior: 'smooth' });
     } catch {

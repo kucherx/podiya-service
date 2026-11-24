@@ -68,6 +68,28 @@ export function formatDateDisplay(value) {
 
 export function parseInputDateTime(value) {
   if (!value) return null;
-  const parsed = new Date(`${value}:00`);
+  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(String(value));
+  if (!match) return null;
+
+  const [, year, month, day, hour, minute] = match.map(Number);
+  const utcGuess = Date.UTC(year, month - 1, day, hour, minute);
+  const offset = kyivOffsetMinutes(new Date(utcGuess));
+  const parsed = new Date(utcGuess - offset * 60_000);
   return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+/**
+ * Зсув Києва для конкретної миті: +02:00 взимку, +03:00 влітку.
+ * Беремо полудень UTC, щоб не попасти на нічний перехід DST.
+ */
+function kyivOffsetMinutes(date) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Europe/Kyiv',
+    timeZoneName: 'longOffset'
+  }).formatToParts(date);
+  const name = parts.find((part) => part.type === 'timeZoneName')?.value || 'GMT+02:00';
+  const offset = /GMT([+-])(\d{2}):(\d{2})/.exec(name);
+  if (!offset) return 120;
+  const sign = offset[1] === '-' ? -1 : 1;
+  return sign * (Number(offset[2]) * 60 + Number(offset[3]));
 }

@@ -2,7 +2,7 @@ import { Not } from 'typeorm';
 import { AppDataSource } from '../../db/data-source.js';
 import { formConfig } from '../../view/forms/index.js';
 import { validate } from '../../validation/validate.js';
-import { comparePassword, hashPassword } from '../../auth/passwords.js';
+import { comparePassword, hashPassword, passwordProblem } from '../../auth/passwords.js';
 import { publicInfo } from '../../auth/user-view.js';
 import { ROLES } from '../../auth/roles.js';
 import { jsonError } from '../helpers.js';
@@ -90,7 +90,10 @@ export async function updatePassword(req, res) {
     errors.currentPassword = 'Поточний пароль неправильний.';
   }
   if (!next) errors.newPassword = 'Введіть новий пароль.';
-  else if (next.length < 8) errors.newPassword = 'Пароль має містити щонайменше 8 символів.';
+  else {
+    const problem = passwordProblem(next);
+    if (problem) errors.newPassword = problem;
+  }
   if (next !== confirm) errors.confirmPassword = 'Паролі не збігаються.';
 
   if (Object.keys(errors).length) {

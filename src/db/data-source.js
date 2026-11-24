@@ -1,17 +1,27 @@
+import 'dotenv/config';
 import 'reflect-metadata';
-import fs from 'node:fs';
-import path from 'node:path';
 import { DataSource } from 'typeorm';
 import { entities } from './entity/index.js';
 
-const databasePath = path.resolve(process.env.DATABASE_PATH || 'storage/podiya.sqlite');
-fs.mkdirSync(path.dirname(databasePath), { recursive: true });
+const url = process.env.DATABASE_URL;
+
+if (!url) {
+  throw new Error('DATABASE_URL не заданий. Проєкт працює лише з PostgreSQL (Neon).');
+}
+
+const useSsl = process.env.DB_SSL !== 'false';
 
 export const AppDataSource = new DataSource({
-  type: 'sqljs',
-  location: databasePath,
-  autoSave: true,
+  type: 'postgres',
+  url,
+  ssl: useSsl ? { rejectUnauthorized: false } : false,
   entities,
-  synchronize: true,
-  logging: false
+  // Схема створюється з db/schema.sql, а не автоматично під час запиту.
+  synchronize: false,
+  logging: false,
+  extra: {
+    max: Number(process.env.DB_POOL_MAX) || 5,
+    idleTimeoutMillis: 30_000,
+    connectionTimeoutMillis: 10_000
+  }
 });

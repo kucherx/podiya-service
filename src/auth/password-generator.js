@@ -5,7 +5,7 @@ const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
 const digits = '23456789';
 const symbols = '!@#$%&*';
 
-export function generatePassword(length = 14) {
+export function generatePassword(length = 16) {
   const all = lower + upper + digits + symbols;
   const chars = [
     lower[randomInt(lower.length)],

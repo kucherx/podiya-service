@@ -1,0 +1,67 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<section class="page-head page-head-centered">
+  <div>
+    <p class="kicker">Обліковий запис</p>
+    <h1>{{ title }}</h1>
+  </div>
+</section>
+
+<form class="entity-form" method="post" action="{{ redirect }}" novalidate data-ajax data-api data-api-action="{{ apiAction }}" data-method="{{ 'PUT' if isEdit else 'POST' }}" data-redirect="{{ redirect }}" data-form-page data-form-resource="users" data-form-id="{{ recordId }}">
+  <section class="form-card">
+    <div class="form-grid">
+      <div class="field{% if errors.email %} field-invalid{% endif %}">
+        <label for="user-email">Email <span class="req">*</span></label>
+        <input id="user-email" type="email" name="email" value="{{ values.email }}" placeholder="user@example.com" autocomplete="off">
+        {% if errors.email %}<p class="field-error">{{ errors.email }}</p>{% endif %}
+      </div>
+
+      <div class="field{% if errors.role %} field-invalid{% endif %}">
+        <label for="user-role">Роль <span class="req">*</span></label>
+        <select id="user-role" name="role" data-custom-select data-user-role data-placeholder="Оберіть роль">
+          {% for role in roles %}
+            <option value="{{ role.value }}"{% if role.value == values.role %} selected{% endif %}>{{ role.label }}</option>
+          {% endfor %}
+        </select>
+        {% if errors.role %}<p class="field-error">{{ errors.role }}</p>{% endif %}
+      </div>
+
+      <div class="field user-profile{% if errors.organizerId %} field-invalid{% endif %}" data-profile="organizer"{% if values.role != 'organizer' %} hidden{% endif %}>
+        <label for="user-organizer">Організатор</label>
+        <select id="user-organizer" name="organizerId" data-custom-select data-placeholder="Оберіть організатора">
+          <option value="">Оберіть організатора</option>
+          {% for organizer in organizers %}
+            <option value="{{ organizer.id }}"{% if organizer.id == values.organizerId %} selected{% endif %}>{{ organizer.name }} — {{ organizer.city }}</option>
+          {% endfor %}
+        </select>
+        {% if errors.organizerId %}<p class="field-error">{{ errors.organizerId }}</p>{% endif %}
+      </div>
+
+      <div class="field user-profile{% if errors.clientId %} field-invalid{% endif %}" data-profile="client"{% if values.role != 'client' %} hidden{% endif %}>
+        <label for="user-client">Клієнт</label>
+        <select id="user-client" name="clientId" data-custom-select data-placeholder="Оберіть клієнта">
+          <option value="">Оберіть клієнта</option>
+          {% for client in clients %}
+            <option value="{{ client.id }}"{% if client.id == values.clientId %} selected{% endif %}>{{ client.fullName }} — {{ client.email }}</option>
+          {% endfor %}
+        </select>
+        {% if errors.clientId %}<p class="field-error">{{ errors.clientId }}</p>{% endif %}
+      </div>
+
+      {% if not isEdit %}
+        <div class="field{% if errors.password %} field-invalid{% endif %}">
+          <label for="user-password">Початковий пароль <span class="req">*</span></label>
+          <input id="user-password" type="password" name="password" placeholder="12+ символів, літери й цифри" autocomplete="new-password">
+          {% if errors.password %}<p class="field-error">{{ errors.password }}</p>{% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="form-actions">
+      <a class="btn btn-ghost" href="/users">Скасувати</a>
+      <button class="btn btn-primary" type="submit">{{ 'Зберегти зміни' if isEdit else 'Створити користувача' }}</button>
+    </div>
+  </section>
+</form>
+{% endblock %}
